@@ -3,65 +3,207 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>vaelora.dev</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <meta name="description" content="Vaelora — Custom LLM inference engine (SeraphByte) and personality-driven Discord bot (Seraphine). Built from scratch in Rust by one indie developer.">
+  <meta name="author" content="Vaelora Studio">
+  <title>Vaelora | Inference · Personality · Software</title>
+  
+  <meta property="og:title" content="Vaelora — Custom Inference &amp; Personality AI">
+  <meta property="og:description" content="One person. No abstractions. A Rust inference engine and a tsundere Discord bot.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vaelora.studio">
+  <meta property="og:image" content="https://vaelora.studio/og-image.jpg">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&amp;family=Inter:wght@300;400;500&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet" />
 
-    body {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #0a0a0f;
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      color: #e2e8f0;
-    }
-
-    .card {
-      text-align: center;
-      padding: 3rem 4rem;
-      border: 1px solid #2d2d3a;
-      border-radius: 1.5rem;
-      background: #12121c;
-      box-shadow: 0 0 60px rgba(139, 92, 246, 0.08);
-    }
-
-    .dot {
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      background: #8b5cf6;
-      border-radius: 50%;
-      margin-bottom: 1.5rem;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50%       { opacity: 0.4; transform: scale(0.8); }
-    }
-
-    h1 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      color: #f8fafc;
-    }
-
-    h1 span { color: #8b5cf6; }
-
-    p {
-      margin-top: 0.75rem;
-      font-size: 1rem;
-      color: #64748b;
-    }
-  </style>
+  <link id="theme-link" rel="stylesheet" href="lightmode.css" />
 </head>
 <body>
-  <div class="card">
-    <div class="dot"></div>
-    <h1>vaelora<span>.dev</span></h1>
-    <p>Something is being built here.</p>
-  </div>
+
+  <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark/light mode">
+    <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+    <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+    </svg>
+  </button>
+
+  <nav class="sticky-nav" aria-label="Main navigation" id="sticky-nav">
+    <a href="#" class="nav-logo-wrap" aria-label="Vaelora homepage">
+      <img src="logo.png" alt="Vaelora Logo" class="nav-logo-img" />
+    </a>
+    <ul class="nav-links">
+      <li><a href="#products">Products</a></li>
+      <li><a href="#demo">Demo</a></li>
+      <li><a href="#philosophy">Studio</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero" id="hero">
+    <div class="orb-wrap"><div class="orb" aria-hidden="true"></div></div>
+
+    <div class="hero-brand-container fade-up">
+      <img src="logo.png" alt="Vaelora Premium Emblem" class="hero-brand-logo" />
+    </div>
+
+    <p class="hero-eyebrow fade-up">Inference · Personality · Software</p>
+
+    <h1 class="hero-title fade-up">
+      Built from the <em>ground up</em>
+    </h1>
+
+    <p class="hero-sub fade-up">
+      Vaelora is one person, multiple projects, and no shortcuts.
+    </p>
+
+    <div class="hero-cta fade-up">
+      <a href="#products" class="btn btn-primary">See our work</a>
+      <a href="#contact" class="btn btn-ghost">Get in touch</a>
+    </div>
+  </section>
+
+  <section class="products" id="products">
+    <div class="products-inner">
+      <div class="products-header">
+        <p class="section-label">Products</p>
+        <h2 class="products-title">The engine and the voice</h2>
+      </div>
+      
+      <div class="products-grid">
+        <article class="card card-featured">
+          <span class="card-label">Local AI · Autonomous Agent</span>
+          <h3 class="card-name">Æther Forge</h3>
+          <p class="card-desc">
+            A fully local AI assistant that listens, reasons, executes, and evolves. Powered by local language models with voice interaction, autonomous tool creation, and a self-growing capability system tracked through Git.
+          </p>
+          <a href="#" class="card-link" aria-label="View Æther Forge project">
+            View project
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path d="M2 6h8M6.5 2.5L10 6l-3.5 3.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </article>
+
+        <article class="card">
+          <span class="card-label">Inference Engine · Rust</span>
+          <h3 class="card-name">SeraphByte</h3>
+          <p class="card-desc">A custom LLM inference engine written from scratch in Rust. Handles tokenization, quantized model loading, and WebSocket streaming — purpose-built to run a fine-tuned model on constrained hardware.</p>
+          <a href="#" class="card-link" aria-label="View SeraphByte project">
+            View project
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path d="M2 6h8M6.5 2.5L10 6l-3.5 3.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </article>
+
+        <article class="card">
+          <span class="card-label">Discord Bot · Fine-tuned LLM</span>
+          <h3 class="card-name">Seraphine</h3>
+          <p class="card-desc">A Discord bot with a tsundere persona baked into the model weights — not a system prompt. Personality via LoRA fine-tuning on a custom synthetic dataset, served live by SeraphByte.</p>
+          <a href="#" class="card-link" aria-label="View Seraphine project">
+            View project
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path d="M2 6h8M6.5 2.5L10 6l-3.5 3.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="demo" id="demo">
+    <div class="demo-inner">
+      <div class="demo-header">
+        <p class="section-label">Live Demo</p>
+        <h2 class="demo-title">Talk to Seraphine</h2>
+        <p class="demo-sub">Served live by SeraphByte. Limited to 3 interactions to keep the server happy.</p>
+      </div>
+
+      <div class="chat-container">
+        <div class="chat-header">
+          <div class="status-indicator"></div>
+          <span class="bot-name">Seraphine</span>
+          <span class="prompt-counter" id="prompt-counter">3 prompts left</span>
+        </div>
+        
+        <div class="chat-messages" id="chat-messages">
+          <div class="msg msg-bot">
+            <div class="msg-bubble">
+              Hmph. Fine, I'm here. Don't expect me to keep you company all day, okay? What do you want?
+            </div>
+          </div>
+        </div>
+
+        <form class="chat-input-area" id="chat-form">
+          <input 
+            type="text" 
+            id="chat-input" 
+            placeholder="Ask her something..." 
+            aria-label="Message Seraphine"
+            required
+            autocomplete="on"
+          />
+          <button type="submit" class="btn btn-primary btn-send" id="send-btn">
+            Send
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="philosophy" id="philosophy">
+    <div class="philosophy-inner">
+      <div class="philosophy-left">
+        <p class="section-label">About</p>
+        <h2 class="philosophy-title">Zero compromises.<br/>No abstractions.</h2>
+      </div>
+      <div class="philosophy-right">
+        <p class="philosophy-body">Vaelora is an independent software research and development lab dedicated to stripping away the bloat of modern AI. Our core infrastructure, SeraphByte, started with a fundamental engineering challenge: building a high-efficiency inference engine entirely from scratch. The result is a lean, highly optimized framework built to bypass the black-box limitations of traditional tooling.</p>
+        <p class="philosophy-body">Seraphine serves as live proof of this architecture—a highly interactive Discord agent designed to operate directly on constrained hardware. By baking her distinct persona directly into the model weights rather than relying on runtime system prompts, we achieve unparalleled execution speed and native behavior.</p>
+        <div class="pillar-list">
+          <div class="pillar">
+            <div class="pillar-dot"></div>
+            <p class="pillar-text"><strong>Self-hosted end to end.</strong> Engineered to run locally on consumer-grade hardware like a GTX 1050 Ti. Zero cloud dependencies, zero vendor lock-in.</p>
+          </div>
+          <div class="pillar">
+            <div class="pillar-dot"></div>
+            <p class="pillar-text"><strong>Built from the ground up.</strong> Complete ownership of our stack. The tokenizer, the inference engine, and the fine-tuning pipeline are all custom-engineered.</p>
+          </div>
+          <div class="pillar">
+            <div class="pillar-dot"></div>
+            <p class="pillar-text"><strong>Transparent engineering.</strong> Built in public. Our entire development process is streamed live, fostering true community-driven innovation.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="contact-inner">
+      <p class="section-label">Contact</p>
+      <h2 class="contact-title">Let's make something worth keeping.</h2>
+      <p class="contact-sub">We take on a small number of projects each year. If the work sounds like a fit, say hello.</p>
+      <button class="btn btn-primary" id="copy-email-btn" data-email="camilla@vaelora.dev">
+        <span id="btn-text">camilla@vaelora.dev</span>
+      </button>
+  </section>
+
+  <footer>
+    <span class="footer-logo">Vaelora - Let's make something worth keeping.</span>
+    <span class="footer-meta">© 2026 Vaelora. All rights reserved.</span>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
