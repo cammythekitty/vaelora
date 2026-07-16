@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Determine initial theme: priority goes to LocalStorage, then System Preference, default to Light
   const savedTheme = localStorage.getItem('theme');
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  
   const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
   
   if (themeLink) {
@@ -31,11 +30,16 @@ document.addEventListener('DOMContentLoaded', () => {
   function setTheme(theme) {
     if (!themeLink) return;
 
-    // Force clean, absolute root paths to bypass server subdirectory confusion
-    const resolvedHref = theme === 'dark' ? '/darkmode.css' : '/lightmode.css';
+    // Force strict root-relative absolute paths to bypass directory nesting issues
+    const targetHref = theme === 'dark' ? '/darkmode.css' : '/lightmode.css';
 
-    themeLink.setAttribute('href', resolvedHref);
+    // CRITICAL: Only update the link attribute if it actually changed.
+    // This prevents the browser from triggering a recursive 404 look-up loop.
+    if (themeLink.getAttribute('href') !== targetHref) {
+      themeLink.setAttribute('href', targetHref);
+    }
 
+    // Toggle icons and save preference to browser storage
     if (theme === 'dark') {
       if (sunIcon) sunIcon.style.display = 'block';
       if (moonIcon) moonIcon.style.display = 'none';
@@ -68,14 +72,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Dynamic Sticky navbar visibility handler
   if (stickyNav) {
-    // If the page has no scrollability (like our fixed 100vh product pages),
-    // we force the navbar to be visible instantly.
+    // Check if the current page has space to scroll.
+    // If it is static/locked (100vh on product pages), show navigation instantly.
     const isScrollable = document.documentElement.scrollHeight > window.innerHeight;
 
     if (!isScrollable) {
       stickyNav.classList.add('visible');
     } else {
-      // If it is the main landing page, use your classic scroll threshold
+      // If it is the scrollable landing page, apply the scroll listener threshold
       window.addEventListener('scroll', () => {
         if (window.scrollY > 150) {
           stickyNav.classList.add('visible');
