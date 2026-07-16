@@ -15,7 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Toggle Action Click Listener
   themeToggle.addEventListener('click', () => {
-    const currentTheme = themeLink.getAttribute('href') === 'lightmode.css' ? 'light' : 'dark';
+    const currentHref = themeLink.getAttribute('href') || '';
+    const currentTheme = currentHref.includes('lightmode.css') ? 'light' : 'dark';
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
   });
@@ -43,13 +44,18 @@ if (copyBtn && btnText) {
 }
   // Smooth theme swapper
   function setTheme(theme) {
+    const currentHref = themeLink.getAttribute('href') || '';
+    const currentDir = currentHref.includes('/') ? currentHref.substring(0, currentHref.lastIndexOf('/') + 1) : '';
+    const themeFile = theme === 'dark' ? 'darkmode.css' : 'lightmode.css';
+    const resolvedHref = `${currentDir}${themeFile}`;
+
     if (theme === 'dark') {
-      themeLink.setAttribute('href', 'darkmode.css');
+      themeLink.setAttribute('href', resolvedHref);
       sunIcon.style.display = 'block';
       moonIcon.style.display = 'none';
       localStorage.setItem('theme', 'dark');
     } else {
-      themeLink.setAttribute('href', 'lightmode.css');
+      themeLink.setAttribute('href', resolvedHref);
       sunIcon.style.display = 'none';
       moonIcon.style.display = 'block';
       localStorage.setItem('theme', 'light');
