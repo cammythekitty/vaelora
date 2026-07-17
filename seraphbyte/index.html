@@ -6,18 +6,14 @@
   <meta name="description" content="SeraphByte by Vaelora — Bare-metal, zero-dependency LLM inference engine written in Rust.">
   <meta name="author" content="Vaelora Studio">
   <title>Vaelora | SeraphByte Engine</title>
-  <link id="theme-link" rel="stylesheet" href="/lightmode.css" />
+  <link id="theme-link" rel="stylesheet" href="" />
 
   <script>
     (function() {
       const savedTheme = localStorage.getItem('theme');
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       const activeTheme = savedTheme || (prefersDark ? 'dark' : 'light');
-      
-      const themeLink = document.getElementById('theme-link');
-      if (themeLink) {
-        themeLink.href = activeTheme === 'dark' ? '/darkmode.css' : '/lightmode.css';
-      }
+      document.getElementById('theme-link').href = activeTheme === 'dark' ? '/darkmode.css' : '/lightmode.css';
     })();
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />

@@ -72,4 +72,82 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   }
+
+  // Chat Demo Handler
+  const chatForm = document.getElementById('chat-form');
+  const chatInput = document.getElementById('chat-input');
+  const chatMessages = document.getElementById('chat-messages');
+  const promptCounter = document.getElementById('prompt-counter');
+  const sendBtn = document.getElementById('send-btn');
+
+  const MAX_PROMPTS = 3;
+  const STORAGE_KEY = 'seraphine_prompts_used';
+
+  let promptsUsed = parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10);
+  let promptsLeft = Math.max(0, MAX_PROMPTS - promptsUsed);
+
+  function updateCounter() {
+    promptCounter.textContent = `${promptsLeft} prompt${promptsLeft !== 1 ? 's' : ''} left`;
+  }
+
+  function lockChat() {
+    sendBtn.disabled = true;
+    chatInput.disabled = true;
+    chatInput.placeholder = "You've used all your prompts.";
+  }
+
+  // Restore state on page load
+  updateCounter();
+  if (promptsLeft === 0) lockChat();
+
+  if (chatForm) {
+    chatForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const message = chatInput.value.trim();
+      if (!message || promptsLeft <= 0) return;
+
+      // Deduct immediately before the request so they can't spam
+      promptsUsed++;
+      promptsLeft--;
+      localStorage.setItem(STORAGE_KEY, promptsUsed);
+      updateCounter();
+      if (promptsLeft === 0) lockChat();
+
+      chatMessages.innerHTML += `
+        <div class="msg msg-user">
+          <div class="msg-bubble">${message}</div>
+        </div>`;
+      chatInput.value = '';
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+
+      const typing = document.createElement('div');
+      typing.className = 'msg msg-bot';
+      typing.innerHTML = '<div class="msg-bubble">...</div>';
+      chatMessages.appendChild(typing);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+
+      try {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message })
+        });
+        const data = await res.json();
+        typing.remove();
+        chatMessages.innerHTML += `
+          <div class="msg msg-bot">
+            <div class="msg-bubble">${data.reply}</div>
+          </div>`;
+      } catch (err) {
+        typing.remove();
+        chatMessages.innerHTML += `
+          <div class="msg msg-bot">
+            <div class="msg-bubble">...tch. Something went wrong. Don't look at me like that.</div>
+          </div>`;
+      }
+
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
+  }
 });
