@@ -1,0 +1,7 @@
+[git]
+repo_path = "/home/cammy/projects/vaelora"
+count = 8
+
+[tools]
+# Path to TOOLS.md — relative to repo_path, or absolute
+tools_md = "TOOLS.md"

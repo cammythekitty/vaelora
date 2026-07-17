@@ -3,195 +3,1373 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Æther Forge by Vaelora — An autonomous local AI assistant that listens, reasons, and self-evolves.">
-  <meta name="author" content="Vaelora Studio">
+  <meta name="description" content="Æther Forge by Vaelora — A fully local AI environment that grows with you.">
   <title>Vaelora | Æther Forge</title>
-  <link id="theme-link" rel="stylesheet" href="/lightmode.css" />
-
-  <script>
-    (function() {
-      const savedTheme = localStorage.getItem('theme');
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const activeTheme = savedTheme || (prefersDark ? 'dark' : 'light');
-      const themeLink = document.getElementById('theme-link');
-      if (themeLink) {
-        themeLink.href = activeTheme === 'dark' ? '/darkmode.css' : '/lightmode.css';
-      }
-    })();
-  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+/* ─── TOKENS ──────────────────────────────────────────────── */
+:root {
+  --bg:          #080808;
+  --surface:     #0e0e0e;
+  --surface2:    #161616;
+  --border:      #1e1e1e;
+  --border2:     #2a2a2a;
+  --amber:       #E8A030;
+  --amber-dim:   #A06818;
+  --amber-glow:  rgba(232,160,48,0.18);
+  --amber-glow2: rgba(232,160,48,0.06);
+  --text:        #E8E2D8;
+  --text-dim:    #888070;
+  --text-faint:  #3e3830;
+  --red:         #FF5F57;
+  --yellow:      #FFBD2E;
+  --green:       #28C840;
+  --mono:        'JetBrains Mono', monospace;
+  --serif:       'Cormorant Garamond', serif;
+  --sans:        'Inter', sans-serif;
+  --radius:      3px;
+}
 
-    .sticky-nav {
-      position: relative !important;
-      transform: none !important;
-      opacity: 1 !important;
-      width: 100%;
-      box-sizing: border-box;
-    }
+/* ─── RESET ───────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-weight: 300;
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+ul { list-style: none; }
+button { cursor: pointer; font-family: var(--mono); }
+.hidden { display: none !important; }
 
-    .philosophy-fullscreen {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 3rem 4rem;
-      box-sizing: border-box;
-    }
+/* ─── NAV ─────────────────────────────────────────────────── */
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 3rem;
+  background: rgba(8,8,8,0.9);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+  transform: translateY(-100%);
+  opacity: 0;
+  transition: transform 0.35s ease, opacity 0.35s ease;
+}
+.nav.visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+.nav-wordmark {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+.nav-links {
+  display: flex;
+  gap: 2.5rem;
+}
+.nav-links a {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--amber); }
 
-    .philosophy-inner {
-      display: grid;
-      grid-template-columns: 1.1fr 1.3fr;
-      gap: 6rem;
-      width: 100%;
-      max-width: 1200px;
-      margin: 0 auto;
-      align-items: center;
-    }
+/* ─── HERO ────────────────────────────────────────────────── */
+.hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 620px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #000;
+}
+#rune-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.hero-title-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 1.4s ease, transform 1.4s ease;
+}
+.hero-title-block.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--amber-dim);
+  margin-bottom: 0.2rem;
+}
+.hero-title {
+  font-family: var(--mono);
+  font-size: clamp(1.6rem, 4.5vw, 3rem);
+  font-weight: 400;
+  letter-spacing: 0.42em;
+  color: var(--text);
+  text-shadow: 0 0 60px var(--amber-glow);
+}
+.hero-rule {
+  width: 48px;
+  height: 1px;
+  background: var(--amber-dim);
+  opacity: 0.5;
+}
+.hero-sub {
+  font-family: var(--serif);
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+}
+.hero-meta {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
 
-    .philosophy-left, .philosophy-right {
-      width: 100%;
-    }
+/* ─── FORGE BUTTON ────────────────────────────────────────── */
+.btn-forge {
+  display: inline-block;
+  margin-top: 0.6rem;
+  padding: 0.8rem 2.4rem;
+  border: 1px solid var(--amber);
+  color: var(--amber);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  background: transparent;
+  transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+  animation: pulse-border 3s ease-in-out infinite;
+  border-radius: var(--radius);
+}
+.btn-forge:hover {
+  background: var(--amber);
+  color: #000;
+  box-shadow: 0 0 32px var(--amber-glow);
+  animation: none;
+}
+@keyframes pulse-border {
+  0%, 100% { box-shadow: 0 0 0 transparent; }
+  50%       { box-shadow: 0 0 18px var(--amber-glow); }
+}
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  border: 1px solid var(--border2);
+  padding: 0.55rem 1.2rem;
+  border-radius: var(--radius);
+  transition: color 0.2s, border-color 0.2s;
+  background: none;
+}
+.btn-back:hover { color: var(--amber); border-color: var(--amber-dim); }
 
-    .philosophy-title {
-      white-space: nowrap;
-    }
+/* ─── SECTION SHARED ──────────────────────────────────────── */
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.section-label::after {
+  content: '';
+  display: block;
+  width: 32px;
+  height: 1px;
+  background: var(--amber-dim);
+  opacity: 0.5;
+}
+.section-heading {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 300;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+}
+.section-sub {
+  font-size: 0.88rem;
+  color: var(--text-dim);
+  max-width: 500px;
+  margin-bottom: 3rem;
+  line-height: 1.75;
+}
 
-    .philosophy-body {
-      max-width: 540px;
-      line-height: 1.6;
-    }
+/* ─── WIP BANNER ──────────────────────────────────────────── */
+.wip-banner {
+  background: #110c02;
+  border-bottom: 1px solid #2a1e06;
+  padding: 0.55rem 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  position: relative;
+  z-index: 99;
+}
+.wip-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--amber);
+  animation: blink 1.4s step-end infinite;
+  flex-shrink: 0;
+}
+.wip-text {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--amber-dim);
+}
+.wip-tag {
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  background: #1e1406;
+  color: var(--amber);
+  border: 1px solid #3a2a0a;
+  padding: 0.1rem 0.5rem;
+  border-radius: 2px;
+}
 
-    .pillar-list {
-      max-width: 540px;
-      margin-top: 2rem;
-    }
+/* ─── DEMO ────────────────────────────────────────────────── */
+.demo {
+  padding: 7rem 4rem;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+.demo-split {
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  gap: 2rem;
+  align-items: start;
+}
 
-    footer {
-      margin-top: auto;
-      padding: 1.5rem 0;
-    }
+/* Terminal */
+.terminal-panel {
+  background: #070707;
+  border: 1px solid var(--border2);
+  border-radius: 5px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.5), 0 24px 48px rgba(0,0,0,0.5);
+}
+.terminal-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.65rem 1rem;
+  background: #0e0e0e;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.terminal-dot { width: 11px; height: 11px; border-radius: 50%; }
+.terminal-dot.red    { background: var(--red); }
+.terminal-dot.yellow { background: var(--yellow); }
+.terminal-dot.green  { background: var(--green); }
+.terminal-title {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--text-faint);
+  margin-left: 0.4rem;
+  letter-spacing: 0.06em;
+}
+.terminal-body {
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  color: var(--amber);
+  padding: 1.2rem 1.4rem;
+  min-height: 240px;
+  max-height: 340px;
+  overflow-y: auto;
+  line-height: 1.9;
+  flex: 1;
+}
+.terminal-body::-webkit-scrollbar { width: 3px; }
+.terminal-body::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+.term-prompt { color: var(--amber-dim); margin-right: 0.5em; }
+.term-output { color: #b8a880; }
+.term-cursor {
+  display: inline-block;
+  animation: blink 1s step-end infinite;
+  color: var(--amber);
+}
+@keyframes blink { 50% { opacity: 0; } }
 
-    @media (max-width: 768px) {
-      html, body {
-        overflow: auto;
-      }
+.terminal-presets {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.75rem 1.4rem;
+  border-top: 1px solid var(--border);
+  background: #050505;
+  flex-shrink: 0;
+}
+.presets-label {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  margin-bottom: 0.3rem;
+}
+.preset-btn {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-align: left;
+  padding: 0.28rem 0;
+  transition: color 0.15s;
+  letter-spacing: 0.02em;
+}
+.preset-btn:hover { color: var(--amber); }
 
-      .philosophy-fullscreen {
-        padding: 2rem 1.5rem;
-        align-items: flex-start;
-      }
+.terminal-input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1.4rem;
+  border-top: 1px solid var(--border);
+  background: #060606;
+  flex-shrink: 0;
+}
+.terminal-input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  color: var(--text);
+  caret-color: var(--amber);
+}
+.terminal-input::placeholder { color: var(--text-faint); }
+.terminal-send {
+  background: none;
+  border: 1px solid var(--border2);
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  padding: 0.22rem 0.65rem;
+  border-radius: 2px;
+  transition: border-color 0.15s, color 0.15s;
+}
+.terminal-send:hover { border-color: var(--amber); color: var(--amber); }
 
-      .philosophy-inner {
-        grid-template-columns: 1fr;
-        gap: 2.5rem;
-      }
+/* Think panel */
+.think-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  padding-top: 0.5rem;
+}
+.think-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+.think-label {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.22em;
+  color: var(--text-faint);
+  text-transform: uppercase;
+}
+.think-value {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--amber);
+  letter-spacing: 0.1em;
+}
+.think-log {
+  width: 100%;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--text-dim);
+  line-height: 1.8;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0 0.5rem;
+}
+.think-log-entry { color: var(--text-faint); }
+.think-log-entry.active { color: var(--amber-dim); }
+.think-log-entry.done   { color: #4a5a4a; }
 
-      .philosophy-title {
-        white-space: normal;
-      }
+/* ─── DASHBOARD ───────────────────────────────────────────── */
+.dashboard {
+  padding: 7rem 4rem;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.dashboard-inner { max-width: 1200px; margin: 0 auto; }
+.dash-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+}
+.dash-panel {
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.dash-panel-header {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  color: var(--amber);
+  padding: 0.65rem 1.2rem;
+  border-bottom: 1px solid var(--border);
+  background: #050505;
+  text-transform: uppercase;
+}
+.dash-panel-body { padding: 0.3rem 0; }
+.dash-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.52rem 1.2rem;
+  border-bottom: 1px solid #111;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+}
+.dash-row:last-child { border-bottom: none; }
+.dash-tool { color: var(--text-dim); }
+.dash-badge {
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  padding: 0.12rem 0.5rem;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+.dash-badge.active { background: #0e1e0e; color: #3db53d; border: 1px solid #183018; }
+.dash-badge.idle   { background: #181408; color: var(--amber-dim); border: 1px solid #282010; }
+.dash-badge.warn   { background: #201010; color: #c04040; border: 1px solid #401818; }
 
-      .philosophy-body {
-        max-width: 100%;
-      }
+.git-row .git-hash { color: var(--amber-dim); font-size: 0.66rem; flex-shrink: 0; min-width: 58px; }
+.git-row .git-msg  { color: var(--text-faint); font-size: 0.66rem; text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 160px; }
 
-      .pillar-list {
-        max-width: 100%;
-      }
+.sys-row .sys-key { color: var(--text-faint); }
+.sys-row .sys-val { color: var(--text-dim); }
+.sys-val.amber { color: var(--amber); }
+.pulse-amber {
+  color: var(--amber);
+  animation: pulse-text 2.5s ease-in-out infinite;
+}
+@keyframes pulse-text {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.45; }
+}
 
-      .hero-brand-logo {
-        display: none;
-      }
-    }
+/* ─── DOCS ────────────────────────────────────────────────── */
+.docs {
+  padding: 7rem 4rem;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+.docs-layout {
+  display: grid;
+  grid-template-columns: 168px 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+.docs-sidebar ul { display: flex; flex-direction: column; gap: 0.1rem; }
+.doc-link {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+  padding: 0.42rem 0.8rem;
+  border-left: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+  border-radius: 0 2px 2px 0;
+}
+.doc-link:hover { color: var(--text-dim); }
+.doc-link.active {
+  color: var(--amber);
+  border-left-color: var(--amber);
+  background: var(--amber-glow2);
+}
+.docs-content { position: relative; }
+.doc-section { display: none; }
+.doc-section.active { display: block; }
+.doc-section h3 {
+  font-family: var(--serif);
+  font-size: 1.7rem;
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+.doc-section p {
+  font-size: 0.86rem;
+  color: var(--text-dim);
+  line-height: 1.8;
+  margin-bottom: 1.4rem;
+  max-width: 580px;
+}
+.code-block {
+  font-family: var(--mono);
+  font-size: 0.73rem;
+  background: #040404;
+  border: 1px solid var(--border2);
+  border-left: 2px solid var(--amber);
+  padding: 1.2rem 1.6rem;
+  color: var(--amber);
+  line-height: 2.1;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  margin-top: 0.5rem;
+  margin-bottom: 1.4rem;
+}
+.code-comment { color: var(--text-faint); }
+.code-dim { color: #4a4038; }
+
+/* Architecture diagram */
+.arch-diagram {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 1.5rem;
+  max-width: 340px;
+}
+.arch-node {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  border: 1px solid var(--border2);
+  padding: 0.5rem 1.2rem;
+  background: var(--surface2);
+  width: 100%;
+  text-align: center;
+  border-radius: 2px;
+}
+.amber-node {
+  border-color: var(--amber);
+  color: var(--amber);
+  background: #0c0800;
+  box-shadow: 0 0 16px var(--amber-glow2);
+}
+.arch-arrow { color: var(--amber-dim); font-size: 0.9rem; opacity: 0.6; }
+.arch-row-nodes { display: flex; gap: 0.4rem; width: 100%; }
+.arch-node.small { font-size: 0.62rem; padding: 0.4rem 0.4rem; }
+
+/* ─── DOWNLOAD ────────────────────────────────────────────── */
+.download {
+  padding: 7rem 4rem;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+.download .section-sub {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+.download .section-label { justify-content: center; }
+.download .section-label::after { display: none; }
+.dl-tabs {
+  display: inline-flex;
+  gap: 0;
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+.dl-tab {
+  background: none;
+  border: none;
+  border-right: 1px solid var(--border2);
+  color: var(--text-faint);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  padding: 0.55rem 1.4rem;
+  transition: background 0.15s, color 0.15s;
+}
+.dl-tab:last-child { border-right: none; }
+.dl-tab:hover { color: var(--text-dim); background: #0e0e0e; }
+.dl-tab.active { background: #111; color: var(--amber); }
+.soon-tag {
+  font-size: 0.52rem;
+  letter-spacing: 0.1em;
+  background: #1a1508;
+  color: var(--amber-dim);
+  padding: 0.1rem 0.4rem;
+  border-radius: 2px;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+}
+.dl-code-wrap {
+  max-width: 520px;
+  margin: 0 auto 2.5rem;
+  text-align: left;
+}
+.dl-code { margin-top: 0; }
+
+/* ─── FOOTER ──────────────────────────────────────────────── */
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.8rem 4rem;
+  border-top: 1px solid var(--border);
+}
+.footer-wordmark {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--amber-dim);
+}
+.footer-copy {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  color: var(--text-faint);
+}
+
+/* ─── STATUS BADGE ────────────────────────────────────────── */
+.build-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid #2a1e06;
+  background: #110c02;
+  padding: 0.3rem 0.75rem;
+  border-radius: 100px;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: var(--amber-dim);
+  margin-bottom: 1.6rem;
+}
+.build-status-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--amber);
+  animation: blink 1.4s step-end infinite;
+}
+
+/* ─── RESPONSIVE ──────────────────────────────────────────── */
+@media (max-width: 960px) {
+  .nav { padding: 0.9rem 1.5rem; }
+  .nav-links { gap: 1.4rem; }
+  .demo { padding: 5rem 1.5rem; }
+  .demo-split { grid-template-columns: 1fr; }
+  .think-panel { flex-direction: row; flex-wrap: wrap; justify-content: center; }
+  .dash-grid { grid-template-columns: 1fr; }
+  .dashboard { padding: 5rem 1.5rem; }
+  .docs { padding: 5rem 1.5rem; }
+  .docs-layout { grid-template-columns: 1fr; gap: 2rem; }
+  .docs-sidebar ul { flex-direction: row; flex-wrap: wrap; gap: 0.4rem; }
+  .download { padding: 5rem 1.5rem; }
+  .footer { padding: 1.5rem 1.5rem; }
+  .wip-banner { padding: 0.55rem 1.5rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn-forge, .pulse-amber, .term-cursor, .wip-dot, .build-status-dot { animation: none; }
+}
   </style>
 </head>
 <body>
 
-  <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark/light mode">
-    <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="5"></circle>
-      <line x1="12" y1="1" x2="12" y2="3"></line>
-      <line x1="12" y1="21" x2="12" y2="23"></line>
-      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-      <line x1="1" y1="12" x2="3" y2="12"></line>
-      <line x1="21" y1="12" x2="23" y2="12"></line>
-      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-    </svg>
-    <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-    </svg>
-  </button>
+<!-- WIP BANNER -->
+<div class="wip-banner">
+  <div class="wip-dot"></div>
+  <span class="wip-text">Active development — unstable builds. Expect breaking changes.</span>
+  <span class="wip-tag">pre-alpha</span>
+</div>
 
-  <nav class="sticky-nav" aria-label="Main navigation" id="sticky-nav">
-    <a href="/index.html" class="nav-logo-wrap" aria-label="Vaelora homepage">
-      <img src="/logo.png" alt="Vaelora Logo" class="nav-logo-img" />
-    </a>
-    <ul class="nav-links">
-      <li><a href="/index.html#products">Products</a></li>
-      <li><a href="/index.html#demo">Demo</a></li>
-      <li><a href="/index.html#philosophy">Studio</a></li>
-      <li><a href="/index.html#contact">Contact</a></li>
-    </ul>
-  </nav>
+<!-- NAV -->
+<nav class="nav" id="sticky-nav">
+  <span class="nav-wordmark">Æ T H E R &nbsp; F O R G E</span>
+  <ul class="nav-links">
+    <li><a href="#demo">Demo</a></li>
+    <li><a href="#dashboard">Dashboard</a></li>
+    <li><a href="#docs">Docs</a></li>
+    <li><a href="#download">Download</a></li>
+  </ul>
+</nav>
 
-  <section class="philosophy philosophy-fullscreen" id="philosophy">
-    <div class="philosophy-inner">
-      <div class="philosophy-left">
-        <p class="section-label">System</p>
-        <h2 class="philosophy-title">Self-Evolving.<br/>Voice Native.</h2>
-        <h4 class="philosophy-subtitle" style="margin-top: 1rem;">Powered by Vaelora</h4>
-        <div style="margin-top: 4rem;">
-          <img src="/logo.png" alt="Vaelora Premium Emblem" class="hero-brand-logo" style="max-height: 80px; width: auto;" />
+<!-- HERO -->
+<section class="hero" id="hero">
+  <canvas id="rune-canvas"></canvas>
+  <div class="hero-content" id="hero-content">
+    <div class="hero-title-block" id="hero-title-block">
+      <div class="build-status">
+        <div class="build-status-dot"></div>
+        pre-alpha · vaelora systems
+      </div>
+      <p class="hero-eyebrow">Vaelora Systems</p>
+      <h1 class="hero-title">Æ T H E R &nbsp; F O R G E</h1>
+      <div class="hero-rule"></div>
+      <p class="hero-sub">A fully local AI environment that grows with you.</p>
+      <a href="#demo" class="btn-forge" id="hero-btn">Begin Forging</a>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO -->
+<section class="demo" id="demo">
+  <div class="section-label">Live Demo</div>
+  <h2 class="section-heading">Command. Execute. Evolve.</h2>
+  <p class="section-sub">Type any command or pick a preset. Watch Æther Forge reason, build, and commit.</p>
+
+  <div class="demo-split">
+    <div class="terminal-panel">
+      <div class="terminal-header">
+        <span class="terminal-dot red"></span>
+        <span class="terminal-dot yellow"></span>
+        <span class="terminal-dot green"></span>
+        <span class="terminal-title">aether-forge — forge@local</span>
+      </div>
+      <div class="terminal-body" id="terminal-output">
+        <div><span class="term-prompt">forge@local:~$</span> <span class="term-cursor">_</span></div>
+      </div>
+      <div class="terminal-presets">
+        <div class="presets-label">Presets</div>
+        <button class="preset-btn" data-cmd="open spotify and play my liked songs">⟁ open spotify and play my liked songs</button>
+        <button class="preset-btn" data-cmd="find all pdfs in my documents folder">⟁ find all pdfs in my documents folder</button>
+        <button class="preset-btn" data-cmd="write a script to backup my home directory">⟁ write a script to backup my home directory</button>
+      </div>
+      <div class="terminal-input-row">
+        <span class="term-prompt">forge@local:~$</span>
+        <input type="text" id="demo-input" class="terminal-input" placeholder="enter a command..." autocomplete="off" spellcheck="false" />
+        <button class="terminal-send" id="demo-send">↵</button>
+      </div>
+    </div>
+
+    <div class="think-panel">
+      <canvas id="think-rune" width="220" height="220"></canvas>
+      <div class="think-status">
+        <span class="think-label">Status</span>
+        <span class="think-value" id="think-value">Idle</span>
+      </div>
+      <div class="think-log" id="think-log">
+        <div class="think-log-entry">· Waiting for input...</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DASHBOARD -->
+<section class="dashboard" id="dashboard">
+  <div class="dashboard-inner">
+    <div class="section-label">Dashboard</div>
+    <h2 class="section-heading">The forge, alive.</h2>
+    <p class="section-sub">Real-time capability monitoring. Every tool tracked. Every change versioned.</p>
+
+    <div class="dash-grid">
+      <div class="dash-panel">
+        <div class="dash-panel-header">Active Tools</div>
+        <div class="dash-panel-body" id="dash-tools">
+          <div class="dash-row"><span class="dash-tool" style="color:var(--text-faint)">loading...</span></div>
         </div>
       </div>
-      <div class="philosophy-right">
-        <p class="philosophy-body"><strong>Æther Forge(WIP)</strong> acts as an autonomous assistant built to exist as a persistent local teammate. By relying directly on local LLM runtimes, it breaks away from rigid commercial cloud constraints, operating with system-level command capabilities to assist you locally.</p>
-        <p class="philosophy-body">With a built-in voice interface and recursive code self-assembly, it doesn't just write scripts—it builds its own ecosystem of persistent, reusable tools and records its evolution and tool integrations directly into localized Git repositories.</p>
 
-        <div class="pillar-list">
-          <div class="pillar">
-            <div class="pillar-dot"></div>
-            <p class="pillar-text"><strong>Autonomous Toolbuilding.</strong> Writes, reviews, compiles, and dynamically integrates its own software tools on the fly.</p>
-          </div>
-          <div class="pillar">
-            <div class="pillar-dot"></div>
-            <p class="pillar-text"><strong>Strictly Local & Voice Native.</strong> Offline speech-to-text processing for secure, zero-latency hands-free interaction.</p>
-          </div>
-          <div class="pillar">
-            <div class="pillar-dot"></div>
-            <p class="pillar-text"><strong>Versioned Capabilities.</strong> Automatic Git-tracked self-updates guarantee that tool changes are fully traceable and reversible.</p>
-          </div>
-        </div>
-
-        <div style="margin-top: 3.5rem;">
-          <a href="/index.html#products" class="btn btn-ghost" style="display: inline-flex; align-items: center; gap: 0.5rem;">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="transform: rotate(180deg);">
-              <path d="M2 6h8M6.5 2.5L10 6l-3.5 3.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            Back to Products
-          </a>
+      <div class="dash-panel">
+        <div class="dash-panel-header">Git Log</div>
+        <div class="dash-panel-body" id="dash-git">
+          <div class="dash-row git-row"><span class="git-hash" style="color:var(--text-faint)">loading...</span></div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <footer>
-    <span class="footer-logo">Vaelora - Let's make something worth keeping.</span>
-    <span class="footer-meta">© 2026 Vaelora. All rights reserved.</span>
-  </footer>
+<script type="module">
+  import { initDashboard } from "./dashboard-client.js";
+  initDashboard();
+</script>
 
-  <script src="/script.js"></script>
+<!-- DOCS -->
+<section class="docs" id="docs">
+  <div class="section-label">Documentation</div>
+  <h2 class="section-heading">How it works.</h2>
+
+  <div class="docs-layout">
+    <nav class="docs-sidebar">
+      <ul>
+        <li><a href="#doc-install"  class="doc-link active" data-target="doc-install">Installation</a></li>
+        <li><a href="#doc-arch"     class="doc-link" data-target="doc-arch">Architecture</a></li>
+        <li><a href="#doc-prompt"   class="doc-link" data-target="doc-prompt">System Prompt</a></li>
+        <li><a href="#doc-upgrade"  class="doc-link" data-target="doc-upgrade">Self-Upgrade</a></li>
+        <li><a href="#doc-platform" class="doc-link" data-target="doc-platform">Platform Notes</a></li>
+      </ul>
+    </nav>
+
+    <div class="docs-content">
+
+      <div class="doc-section active" id="doc-install">
+        <h3>Installation</h3>
+        <p>Æther Forge runs entirely on your local machine. No cloud account, no telemetry, no subscription. You'll need Python 3.11+, a local LLM runtime (Ollama recommended), and optionally a microphone for voice mode.</p>
+        <p>The installer handles model pulling, tool registry init, and Git repo setup automatically.</p>
+        <div class="code-block">
+<span class="code-comment"># requires: python 3.11+, git, ollama</span>
+git clone https://github.com/cammythekitty/aether-forge
+cd aether-forge &amp;&amp; ./install.sh</div>
+        <p style="color:var(--text-faint);font-family:var(--mono);font-size:0.65rem;letter-spacing:0.06em;">⚠ Pre-alpha. Install script may require manual steps on non-Arch systems.</p>
+      </div>
+
+      <div class="doc-section" id="doc-arch">
+        <h3>Architecture</h3>
+        <p>Æther Forge operates as a closed loop: listen → reason → act → version. Every tool it writes is stored, sandboxed, tested, and registered. The forge grows smarter with every command you give it.</p>
+        <div class="arch-diagram">
+          <div class="arch-node">Voice / Text Input</div>
+          <div class="arch-arrow">↓</div>
+          <div class="arch-node">Local LLM (Ollama)</div>
+          <div class="arch-arrow">↓</div>
+          <div class="arch-node amber-node">Tool Builder</div>
+          <div class="arch-arrow">↓</div>
+          <div class="arch-row-nodes">
+            <div class="arch-node small">Sandbox</div>
+            <div class="arch-node small">Test</div>
+            <div class="arch-node small">Git Commit</div>
+          </div>
+          <div class="arch-arrow">↓</div>
+          <div class="arch-node">Tool Registry (persistent)</div>
+        </div>
+      </div>
+
+      <div class="doc-section" id="doc-prompt">
+        <h3>System Prompt</h3>
+        <p>The system prompt is Æther Forge's operating contract — what it can access, how it reasons, and how it documents changes. It's loaded fresh each session and ships with sane defaults.</p>
+        <p>Edit it to restrict capabilities to specific directories, extend it to give the forge awareness of new tools, or scope it to a particular project.</p>
+        <div class="code-block">
+<span class="code-comment"># default location</span>
+~/.aetherforge/system_prompt.md
+
+<span class="code-comment"># per-project override</span>
+./aether.md  <span class="code-dim">← auto-detected if present</span></div>
+      </div>
+
+      <div class="doc-section" id="doc-upgrade">
+        <h3>Self-Upgrade</h3>
+        <p>When Æther Forge builds a new tool, it writes source, runs a sandboxed test, and on success commits the file to your local Git repo with a descriptive message. Failed tools are logged but never registered.</p>
+        <p>Nothing broken makes it into the registry. The diff is yours — inspectable, revertable, owned.</p>
+        <div class="code-block">
+<span class="code-comment"># inspect the forge log</span>
+git -C ~/.aetherforge/tools log --oneline
+
+<span class="code-comment"># roll back a bad tool</span>
+git -C ~/.aetherforge/tools revert HEAD</div>
+      </div>
+
+      <div class="doc-section" id="doc-platform">
+        <h3>Platform Notes</h3>
+        <p>Full support on Linux. Windows via WSL2 works for most tool types — native Win32 execution is in progress. macOS voice input works; system-level tool execution has known limitations on Apple Silicon.</p>
+        <div class="code-block">
+Linux (Arch)  <span class="code-comment">✓ supported but not finished</span>
+Windows WSL2                  <span class="code-comment">x Not supported</span>
+macOS (Apple Silicon)         <span class="code-dim">x Not supported</span>
+Windows native                <span class="code-dim">x Not supported</span></div>
+        <p style="color:var(--text-faint);font-family:var(--mono);font-size:0.65rem;letter-spacing:0.06em;">Tested primarily on Arch Linux. File issues for anything that breaks elsewhere.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- DOWNLOAD -->
+<section class="download" id="download">
+  <div class="section-label">Download</div>
+  <h2 class="section-heading">Start forging.</h2>
+  <p class="section-sub">One command. Fully local. No cloud, no account, no data leaves your machine.</p>
+
+  <div class="dl-tabs">
+    <button class="dl-tab active" data-os="linux">Linux</button>
+    <button class="dl-tab" data-os="windows">Windows (WSL2)</button>
+  </div>
+
+  <div class="dl-code-wrap">
+    <div class="code-block dl-code" id="dl-linux">
+<span class="code-comment"># Linux — tested on Arch, Debian, Fedora</span>
+git clone https://github.com/cammythekitty/aether-forge
+cd aether-forge &amp;&amp; ./install.sh</div>
+    <div class="code-block dl-code hidden" id="dl-windows">
+<span class="code-comment"># Windows — run inside WSL2</span>
+git clone https://github.com/cammythekitty/aether-forge
+cd aether-forge &amp;&amp; bash install.sh</div>
+  </div>
+
+  <div style="display:flex;gap:1rem;justify-content:center;align-items:center;flex-wrap:wrap;">
+    <a href="https://github.com/cammythekitty/aether-forge" class="btn-forge">Clone on GitHub</a>
+    <a href="../index.html" class="btn-back">Back to home</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <span class="footer-wordmark">Æther Forge</span>
+  <span class="footer-copy">© 2026 Vaelora. Pre-alpha — all interfaces subject to change.</span>
+</footer>
+
+<script>
+/* ─── RUNE DATA ───────────────────────────────────────────── */
+const RUNE_CHARS = ['ᚠ','ᚢ','ᚦ','ᚨ','ᚱ','ᚲ','ᚷ','ᚹ','ᚺ','ᚾ','ᛁ','ᛃ'];
+const RUNE_COUNT = 12;
+
+/* ─── HERO RUNE CIRCLE ────────────────────────────────────── */
+(function heroRune() {
+  const canvas = document.getElementById('rune-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  let W, H, cx, cy, radius;
+  let phase = 'lighting';
+  let litCount = 0;
+  let holdTimer = 0;
+  let sweepAngle = 0;
+  let targetX, targetY;
+  let lastTime = 0;
+
+  function resize() {
+    W = canvas.width  = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+    cx = W / 2; cy = H / 2;
+    radius = Math.min(W, H) * 0.26;
+    targetX = W * 0.88; targetY = H * 0.12;
+  }
+  window.addEventListener('resize', () => { resize(); });
+  resize();
+
+  function runePos(i, ox, oy, r) {
+    const angle = (i / RUNE_COUNT) * Math.PI * 2 - Math.PI / 2;
+    return { x: ox + Math.cos(angle) * r, y: oy + Math.sin(angle) * r };
+  }
+
+  function drawRune(i, alpha, ox, oy, r, scale) {
+    const pos = runePos(i, ox, oy, r);
+    const s = (scale || 1) * r * 0.14;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.font = `${s * 2.0}px serif`;
+    ctx.fillStyle = '#E8A030';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.shadowColor = '#E8A030';
+    ctx.shadowBlur = 14 * alpha;
+    ctx.fillText(RUNE_CHARS[i], pos.x, pos.y);
+    ctx.restore();
+  }
+
+  function drawCircle(alpha, ox, oy, r) {
+    ctx.save();
+    ctx.globalAlpha = alpha * 0.22;
+    ctx.strokeStyle = '#E8A030';
+    ctx.lineWidth = 1;
+    ctx.shadowColor = '#E8A030';
+    ctx.shadowBlur = 10;
+    ctx.beginPath();
+    ctx.arc(ox, oy, r, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  const alphas = new Array(RUNE_COUNT).fill(0);
+  const LIGHT_INTERVAL = 160;
+  let lightAccum = 0;
+
+  function tick(ts) {
+    requestAnimationFrame(tick);
+    const dt = Math.min(ts - lastTime, 80);
+    lastTime = ts;
+    ctx.clearRect(0, 0, W, H);
+
+    if (phase === 'lighting') {
+      lightAccum += dt;
+      if (lightAccum >= LIGHT_INTERVAL && litCount < RUNE_COUNT) {
+        lightAccum = 0;
+        alphas[litCount] = 0.01;
+        litCount++;
+        if (litCount === RUNE_COUNT) { phase = 'holding'; holdTimer = 0; }
+      }
+      for (let i = 0; i < litCount; i++) {
+        if (alphas[i] < 1) alphas[i] = Math.min(1, alphas[i] + dt * 0.0035);
+      }
+      drawCircle(1, cx, cy, radius);
+      for (let i = 0; i < RUNE_COUNT; i++) drawRune(i, alphas[i], cx, cy, radius, 1);
+
+    } else if (phase === 'holding') {
+      holdTimer += dt;
+      drawCircle(1, cx, cy, radius);
+      for (let i = 0; i < RUNE_COUNT; i++) drawRune(i, 1, cx, cy, radius, 1);
+      if (holdTimer > 900) { phase = 'sweeping'; sweepAngle = 0; }
+
+    } else if (phase === 'sweeping') {
+      sweepAngle += dt * 0.0028;
+      const t = Math.min(sweepAngle, 1);
+      const ease = t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
+      const ox = cx + (targetX - cx) * ease;
+      const oy = cy + (targetY - cy) * ease;
+      const r  = radius * (1 - ease * 0.64);
+      const sc = 1 - ease * 0.52;
+      drawCircle(1 - ease * 0.4, ox, oy, r);
+      for (let i = 0; i < RUNE_COUNT; i++) drawRune(i, 1 - ease * 0.25, ox, oy, r, sc);
+      if (t >= 1) {
+        phase = 'done';
+        const block = document.getElementById('hero-title-block');
+        if (block) setTimeout(() => block.classList.add('visible'), 100);
+      }
+
+    } else if (phase === 'done') {
+      const pulse = 0.65 + Math.sin(ts * 0.0014) * 0.18;
+      const r = radius * 0.34;
+      drawCircle(pulse, targetX, targetY, r);
+      for (let i = 0; i < RUNE_COUNT; i++) drawRune(i, pulse * 0.5, targetX, targetY, r, 0.48);
+    }
+  }
+
+  requestAnimationFrame(ts => { lastTime = ts; tick(ts); });
+})();
+
+/* ─── THINK PANEL RUNE ────────────────────────────────────── */
+(function thinkRune() {
+  const canvas = document.getElementById('think-rune');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const cx = W/2, cy = H/2, radius = W * 0.35;
+  let thinking = false;
+
+  window._thinkRune = { setThinking: v => { thinking = v; } };
+
+  function tick(ts) {
+    requestAnimationFrame(tick);
+    ctx.clearRect(0, 0, W, H);
+    const pulse = thinking
+      ? 0.4 + Math.sin(ts * 0.007) * 0.5
+      : 0.25 + Math.sin(ts * 0.0008) * 0.1;
+
+    ctx.save();
+    ctx.globalAlpha = pulse * 0.25;
+    ctx.strokeStyle = '#E8A030';
+    ctx.lineWidth = 1;
+    ctx.shadowColor = '#E8A030';
+    ctx.shadowBlur = thinking ? 20 : 6;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI*2);
+    ctx.stroke();
+    ctx.restore();
+
+    const runeAlpha = thinking ? pulse * 0.95 : 0.18;
+    for (let i = 0; i < RUNE_COUNT; i++) {
+      const angle = (i / RUNE_COUNT) * Math.PI * 2 - Math.PI/2
+        + (thinking ? ts * 0.00045 : 0);
+      const x = cx + Math.cos(angle) * radius;
+      const y = cy + Math.sin(angle) * radius;
+      const s = radius * 0.27;
+      ctx.save();
+      ctx.globalAlpha = runeAlpha;
+      ctx.font = `${s}px serif`;
+      ctx.fillStyle = '#E8A030';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.shadowColor = '#E8A030';
+      ctx.shadowBlur = thinking ? 12 : 3;
+      ctx.fillText(RUNE_CHARS[i], x, y);
+      ctx.restore();
+    }
+  }
+  requestAnimationFrame(tick);
+})();
+
+/* ─── DEMO TERMINAL ───────────────────────────────────────── */
+(function demoTerminal() {
+  const output   = document.getElementById('terminal-output');
+  const input    = document.getElementById('demo-input');
+  const sendBtn  = document.getElementById('demo-send');
+  const thinkVal = document.getElementById('think-value');
+  const thinkLog = document.getElementById('think-log');
+  if (!output || !input) return;
+
+  const FAKE_RESPONSES = {
+    'open spotify and play my liked songs': [
+      '→ resolving tool: spotify_control',
+      '→ checking spotify daemon... running',
+      '→ fetching liked songs playlist...',
+      '→ shuffling 847 tracks',
+      '✓ playback started — Liked Songs (shuffled)',
+      '✓ logged: spotify_control v1.2',
+    ],
+    'find all pdfs in my documents folder': [
+      '→ resolving tool: file_search',
+      '→ scanning ~/Documents recursively...',
+      '→ found: thesis_draft.pdf',
+      '→ found: invoice_2026_03.pdf',
+      '→ found: vaelora_notes.pdf',
+      '→ found: architecture_v4.pdf',
+      '✓ 4 PDF files found',
+      '✓ results saved to ~/.aetherforge/last_search',
+    ],
+    'write a script to backup my home directory': [
+      '→ planning tool: backup_home',
+      '→ generating script...',
+      '→ writing: ~/.aetherforge/tools/backup_home.sh',
+      '→ sandbox test: pass',
+      '→ git commit -m "created backup_home"',
+      '✓ tool registered — run: forge backup_home',
+    ],
+  };
+
+  const DEFAULT_RESPONSE = (cmd) => [
+    `→ parsing: "${cmd}"`,
+    '→ no existing tool matched',
+    '→ generating new tool...',
+    '→ sandbox test: pass',
+    '→ git commit -m "added custom action"',
+    '✓ tool registered and executed',
+  ];
+
+  const THINK_STEPS = [
+    'Parsing intent',
+    'Checking tool registry',
+    'Planning execution',
+    'Running sandboxed test',
+    'Committing to Git',
+  ];
+
+  function clearInitialCursor() {
+    if (output.children.length === 1 && output.children[0].querySelector('.term-cursor')) {
+      output.innerHTML = '';
+    }
+  }
+
+  function appendLine(html, color) {
+    const div = document.createElement('div');
+    if (color) div.style.color = color;
+    div.innerHTML = html;
+    output.appendChild(div);
+    output.scrollTop = output.scrollHeight;
+  }
+
+  function setThinking(val) {
+    if (window._thinkRune) window._thinkRune.setThinking(val);
+    if (thinkVal) thinkVal.textContent = val ? 'Processing' : 'Idle';
+  }
+
+  function updateThinkLog(steps, current) {
+    if (!thinkLog) return;
+    thinkLog.innerHTML = steps.map((s, i) => {
+      let cls = 'think-log-entry';
+      let icon = '·';
+      if (i < current) { cls += ' done'; icon = '✓'; }
+      else if (i === current) { cls += ' active'; icon = '→'; }
+      return `<div class="${cls}">${icon} ${s}</div>`;
+    }).join('');
+  }
+
+  async function runCommand(cmd) {
+    const trimmed = cmd.trim().toLowerCase();
+    if (!trimmed) return;
+    clearInitialCursor();
+
+    appendLine(`<span class="term-prompt">forge@local:~$</span> <span style="color:var(--text)">${escHtml(cmd)}</span>`);
+    const lines = FAKE_RESPONSES[trimmed] || DEFAULT_RESPONSE(cmd);
+    setThinking(true);
+
+    for (let i = 0; i < lines.length; i++) {
+      updateThinkLog(THINK_STEPS, Math.floor(i / lines.length * THINK_STEPS.length));
+      await delay(210 + Math.random() * 170);
+      const isSuccess = lines[i].startsWith('✓');
+      await typeOut(lines[i], isSuccess ? '#4ec94e' : undefined);
+    }
+
+    updateThinkLog(THINK_STEPS, THINK_STEPS.length);
+    setThinking(false);
+    appendLine('<span class="term-prompt">forge@local:~$</span> <span class="term-cursor">_</span>');
+  }
+
+  function typeOut(text, color) {
+    return new Promise(resolve => {
+      const div = document.createElement('div');
+      div.style.color = color || 'var(--amber)';
+      div.style.fontFamily = 'var(--mono)';
+      div.style.fontSize = '0.76rem';
+      output.appendChild(div);
+      output.scrollTop = output.scrollHeight;
+      let i = 0;
+      const iv = setInterval(() => {
+        div.textContent += text[i++];
+        output.scrollTop = output.scrollHeight;
+        if (i >= text.length) { clearInterval(iv); resolve(); }
+      }, 16);
+    });
+  }
+
+  function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+  function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function submit() {
+    const val = input.value.trim();
+    if (!val) return;
+    input.value = '';
+    runCommand(val);
+  }
+
+  sendBtn.addEventListener('click', submit);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
+  document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      input.value = btn.dataset.cmd;
+      submit();
+    });
+  });
+})();
+
+/* ─── DASHBOARD ───────────────────────────────────────────── */
+(function dashTicks() {
+  // Uptime counter
+  let seconds = 4 * 86400 + 2 * 3600 + 17 * 60;
+  const uptimeEl = document.getElementById('sys-uptime');
+  if (uptimeEl) {
+    setInterval(() => {
+      seconds++;
+      const d = Math.floor(seconds / 86400);
+      const h = Math.floor((seconds % 86400) / 3600);
+      const m = Math.floor((seconds % 3600) / 60);
+      uptimeEl.textContent = `${d}d ${h}h ${m}m`;
+    }, 1000);
+  }
+
+  // Git log from real GitHub repo
+  const gitPanel = document.getElementById('dash-git');
+  if (gitPanel) {
+    fetch('https://api.github.com/repos/cammythekitty/aether-forge/commits?per_page=6')
+      .then(r => r.json())
+      .then(commits => {
+        if (!Array.isArray(commits) || commits.length === 0) {
+          gitPanel.innerHTML = '<div class="dash-row git-row"><span class="git-hash" style="color:var(--text-faint)">no commits yet</span></div>';
+          return;
+        }
+        gitPanel.innerHTML = commits.map(c => {
+          const hash = c.sha.slice(0, 7);
+          const msg  = c.commit.message.split('\n')[0].slice(0, 36);
+          return `<div class="dash-row git-row"><span class="git-hash">${hash}</span><span class="git-msg">${escHtml(msg)}</span></div>`;
+        }).join('');
+        function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+      })
+      .catch(() => {
+        gitPanel.innerHTML = '<div class="dash-row git-row"><span class="git-hash" style="color:var(--text-faint)">unavailable</span></div>';
+      });
+  }
+
+  // Tool count ticks up occasionally
+  const toolsEl = document.getElementById('sys-tools');
+  if (toolsEl) {
+    setInterval(() => {
+      if (Math.random() < 0.04) toolsEl.textContent = parseInt(toolsEl.textContent) + 1;
+    }, 3000);
+  }
+})();
+
+/* ─── DOCS SIDEBAR ────────────────────────────────────────── */
+(function docsSidebar() {
+  const links    = document.querySelectorAll('.doc-link');
+  const sections = document.querySelectorAll('.doc-section');
+  links.forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      links.forEach(l => l.classList.remove('active'));
+      sections.forEach(s => s.classList.remove('active'));
+      link.classList.add('active');
+      const sec = document.getElementById(link.dataset.target);
+      if (sec) sec.classList.add('active');
+    });
+  });
+})();
+
+/* ─── DOWNLOAD TABS ───────────────────────────────────────── */
+(function downloadTabs() {
+  const tabs  = document.querySelectorAll('.dl-tab');
+  const codes = { linux: 'dl-linux', windows: 'dl-windows', mac: 'dl-mac' };
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      Object.values(codes).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+      });
+      const target = codes[tab.dataset.os];
+      if (target) document.getElementById(target)?.classList.remove('hidden');
+    });
+  });
+})();
+
+/* ─── NAV SCROLL ──────────────────────────────────────────── */
+(function navScroll() {
+  const nav = document.getElementById('sticky-nav');
+  if (!nav) return;
+  let last = 0;
+  function update() {
+    const y = window.scrollY;
+    if (y < 60) {
+      nav.classList.remove('visible');
+    } else {
+      nav.classList.add('visible');
+    }
+    last = y;
+  }
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();
+</script>
 </body>
 </html>
