@@ -3,12 +3,13 @@ use serde::{Deserialize, Serialize};
 use std::{fs, path::PathBuf, process::Command};
 use tower_http::cors::{Any, CorsLayer};
 
+const TOOLS_MD_URL: &str = "https://raw.githubusercontent.com/cammythekitty/aether-forge/main/TOOLS.md";
+
 // ── Config ────────────────────────────────────────────────────────────────────
 
 #[derive(Debug, Deserialize)]
 struct Config {
     git: GitConfig,
-    tools: ToolsConfig,
 }
 
 #[derive(Debug, Deserialize)]
@@ -16,12 +17,6 @@ struct GitConfig {
     repo_path: String,
     #[serde(default = "default_commit_count")]
     count: usize,
-}
-
-#[derive(Debug, Deserialize)]
-struct ToolsConfig {
-    /// Path to TOOLS.md, relative to repo_path or absolute
-    tools_md: String,
 }
 
 fn default_commit_count() -> usize { 8 }
@@ -37,9 +32,7 @@ fn load_config() -> Config {
             return toml::from_str(&raw).expect("invalid dashboard.toml");
         }
     }
-    panic!(
-        "No dashboard.toml found. Create one at ./dashboard.toml or ~/.vaelora/dashboard.toml"
-    );
+    panic!("No dashboard.toml found. Create one at ./dashboard.toml or ~/.vaelora/dashboard.toml");
 }
 
 fn dirs_home() -> PathBuf {
@@ -96,53 +89,40 @@ fn git_log(repo: &str, count: usize) -> Vec<GitCommit> {
 
 // ── TOOLS.md parser ───────────────────────────────────────────────────────────
 
-/// Parses lines of the form:  - `tool_name` — description text
-/// Returns up to 6 tools.
-fn parse_tools_md(path: &str) -> Vec<Tool> {
-    let content = match fs::read_to_string(path) {
-        Ok(c) => c,
-        Err(_) => return vec![],
-    };
-
+fn parse_tools_md(content: &str) -> Vec<Tool> {
     content
         .lines()
         .filter_map(|line| {
             let line = line.trim();
-            // Must start with "- `"
             let rest = line.strip_prefix("- `")?;
-            // Find closing backtick
             let tick = rest.find('`')?;
             let name = rest[..tick].to_string();
-            // Everything after the backtick, strip leading " — " or " - " or " : "
             let after = rest[tick + 1..].trim();
-            let desc = after
-                .trim_start_matches(['—', '-', ':'])
-                .trim()
-                .to_string();
+            let desc = after.trim_start_matches(['—', '-', ':']).trim().to_string();
             Some(Tool { name, desc })
         })
         .take(6)
         .collect()
 }
 
+async fn fetch_tools_md(client: &reqwest::Client) -> Vec<Tool> {
+    match client.get(TOOLS_MD_URL).send().await {
+        Ok(res) if res.status().is_success() => {
+            let text = res.text().await.unwrap_or_default();
+            parse_tools_md(&text)
+        }
+        _ => vec![],
+    }
+}
+
 // ── Handler ───────────────────────────────────────────────────────────────────
 
-async fn dashboard_handler() -> Json<DashboardResponse> {
+async fn dashboard_handler(
+    axum::extract::State(client): axum::extract::State<reqwest::Client>,
+) -> Json<DashboardResponse> {
     let cfg = load_config();
-
-    // Resolve tools_md path: if not absolute, treat as relative to repo_path
-    let tools_md_path = {
-        let p = PathBuf::from(&cfg.tools.tools_md);
-        if p.is_absolute() {
-            p
-        } else {
-            PathBuf::from(&cfg.git.repo_path).join(p)
-        }
-    };
-
     let git = git_log(&cfg.git.repo_path, cfg.git.count);
-    let tools = parse_tools_md(tools_md_path.to_str().unwrap_or(""));
-
+    let tools = fetch_tools_md(&client).await;
     Json(DashboardResponse { git, tools })
 }
 
@@ -152,6 +132,8 @@ async fn dashboard_handler() -> Json<DashboardResponse> {
 async fn main() {
     let _ = load_config();
 
+    let client = reqwest::Client::new();
+
     let cors = CorsLayer::new()
         .allow_origin(Any)
         .allow_methods(Any)
@@ -160,6 +142,7 @@ async fn main() {
     let app = Router::new()
         .route("/api/dashboard", get(dashboard_handler))
         .route("/health", get(|| async { "ok" }))
+        .with_state(client)
         .layer(cors);
 
     let addr = "127.0.0.1:7331";

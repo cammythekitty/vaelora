@@ -1,7 +1,3 @@
 [git]
-repo_path = "/srv/vaelora/aether-forge/"
+repo_path = "/srv/vaelora"
 count = 8
-
-[tools]
-# Path to TOOLS.md — relative to repo_path, or absolute
-tools_md = "TOOLS.md"
