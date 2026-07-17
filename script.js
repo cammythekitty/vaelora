@@ -7,21 +7,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const copyBtn = document.getElementById('copy-email-btn');
   const btnText = document.getElementById('btn-text');
 
-  // Load saved preference state to align the icons (HTML script handles stylesheet)
   const savedTheme = localStorage.getItem('theme');
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
   const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
-  
   updateIcons(initialTheme);
 
-  // Toggle Action Click Listener
   if (themeToggle && themeLink) {
     themeToggle.addEventListener('click', () => {
       const currentHref = themeLink.getAttribute('href') || '';
       const currentTheme = currentHref.includes('lightmode.css') ? 'light' : 'dark';
       const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-      
-      // Force direct, root-relative absolute path
       const targetHref = newTheme === 'dark' ? '/darkmode.css' : '/lightmode.css';
       themeLink.setAttribute('href', targetHref);
       localStorage.setItem('theme', newTheme);
@@ -29,7 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Pure icon visibility helper
   function updateIcons(theme) {
     if (theme === 'dark') {
       if (sunIcon) sunIcon.style.display = 'block';
@@ -40,7 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Email Clipboard Copy Handler
   if (copyBtn && btnText) {
     copyBtn.addEventListener('click', () => {
       const email = copyBtn.getAttribute('data-email');
@@ -57,7 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Dynamic Sticky navbar visibility handler
   if (stickyNav) {
     const isScrollable = document.documentElement.scrollHeight > window.innerHeight;
     if (!isScrollable) {
@@ -96,18 +88,16 @@ document.addEventListener('DOMContentLoaded', () => {
     chatInput.placeholder = "You've used all your prompts.";
   }
 
-  // Restore state on page load
   updateCounter();
   if (promptsLeft === 0) lockChat();
 
   if (chatForm) {
-    chatForm.addEventListener('submit', async (e) => {
+    chatForm.addEventListener('submit', (e) => {
       e.preventDefault();
 
       const message = chatInput.value.trim();
       if (!message || promptsLeft <= 0) return;
 
-      // Deduct immediately before the request so they can't spam
       promptsUsed++;
       promptsLeft--;
       localStorage.setItem(STORAGE_KEY, promptsUsed);
@@ -127,27 +117,41 @@ document.addEventListener('DOMContentLoaded', () => {
       chatMessages.appendChild(typing);
       chatMessages.scrollTop = chatMessages.scrollHeight;
 
-      try {
-        const res = await fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message })
-        });
-        const data = await res.json();
-        typing.remove();
-        chatMessages.innerHTML += `
-          <div class="msg msg-bot">
-            <div class="msg-bubble">${data.reply}</div>
-          </div>`;
-      } catch (err) {
+      const ws = new WebSocket('wss://vaelora.dev/api/chat');
+
+      ws.onopen = () => {
+        ws.send(JSON.stringify({ prompt: message }));
+      };
+
+      let reply = '';
+
+      ws.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          if (data.type === 'done') {
+            ws.close();
+            typing.remove();
+            chatMessages.innerHTML += `
+              <div class="msg msg-bot">
+                <div class="msg-bubble">${reply}</div>
+              </div>`;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+          }
+          // ignore model_info and other typed frames
+        } catch {
+          // not JSON, it's a raw token
+          reply += event.data;
+        }
+      };
+
+      ws.onerror = () => {
         typing.remove();
         chatMessages.innerHTML += `
           <div class="msg msg-bot">
             <div class="msg-bubble">...tch. Something went wrong. Don't look at me like that.</div>
           </div>`;
-      }
-
-      chatMessages.scrollTop = chatMessages.scrollHeight;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      };
     });
   }
 });
