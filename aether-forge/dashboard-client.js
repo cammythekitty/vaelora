@@ -4,7 +4,7 @@
  * Polls /api/dashboard every POLL_MS and updates the two panels.
  */
 
-const DASHBOARD_API = "http://127.0.0.1:7331/api/dashboard";
+const DASHBOARD_API = "/api/dashboard";
 const POLL_MS = 10000;
 
 function renderTools(tools) {
