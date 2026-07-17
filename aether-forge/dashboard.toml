@@ -1,5 +1,5 @@
 [git]
-repo_path = "/home/cammy/projects/vaelora"
+repo_path = "/srv/vaelora/aether-forge/"
 count = 8
 
 [tools]
