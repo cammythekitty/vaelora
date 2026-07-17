@@ -5,97 +5,45 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Seraphine by Vaelora — A weight-baked AI agent with immutable behavioral logic.">
   <meta name="author" content="Vaelora Studio">
-  <title>Vaelora | Seraphine Agent</title>  
-  <link id="theme-link" rel="stylesheet" href="" />
-  <link rel="icon" type="image/png" href="/logo.png">
+  <title>Vaelora | Seraphine Agent</title>
+  <link id="theme-link" rel="stylesheet" href="/lightmode.css" />
   <script>
     (function() {
       const savedTheme = localStorage.getItem('theme');
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       const activeTheme = savedTheme || (prefersDark ? 'dark' : 'light');
-      document.getElementById('theme-link').href = activeTheme === 'dark' ? '/darkmode.css' : '/lightmode.css';
+      const themeLink = document.getElementById('theme-link');
+      if (themeLink) themeLink.href = activeTheme === 'dark' ? '/darkmode.css' : '/lightmode.css';
     })();
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&amp;family=Inter:wght@300;400;500&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet" />
-
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .sticky-nav {
-      position: relative !important;
-      transform: none !important;
-      opacity: 1 !important;
-      width: 100%;
-      box-sizing: border-box;
-    }
-
-    .philosophy-fullscreen {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem 4rem !important;
-      box-sizing: border-box;
-    }
-
-    .philosophy-inner {
-      display: grid !important;
-      grid-template-columns: 1.1fr 1.3fr !important;
-      gap: 6rem !important;
-      width: 100% !important;
-      max-width: 1200px !important;
-      margin: 0 auto !important;
-      align-items: center !important;
-    }
-
-    .philosophy-left, .philosophy-right {
-      flex: none !important;
-      max-width: none !important;
-      width: 100% !important;
-    }
-
-    .philosophy-title {
-      white-space: nowrap !important;
-    }
-
-    .philosophy-body {
-      max-width: 540px !important;
-      line-height: 1.6 !important;
-    }
-
-    .pillar-list {
-      max-width: 540px !important;
-      margin-top: 2rem !important;
-    }
-
-    footer {
-      margin-top: auto !important;
-      padding: 1.5rem 0 !important;
+    html, body { margin: 0; padding: 0; min-height: 100vh; display: flex; flex-direction: column; }
+    .sticky-nav { position: relative !important; transform: none !important; opacity: 1 !important; width: 100%; box-sizing: border-box; }
+    .philosophy-fullscreen { flex: 1; display: flex; align-items: center; justify-content: center; padding: 3rem 4rem; box-sizing: border-box; }
+    .philosophy-inner { display: grid; grid-template-columns: 1.1fr 1.3fr; gap: 6rem; width: 100%; max-width: 1200px; margin: 0 auto; align-items: center; }
+    .philosophy-left, .philosophy-right { width: 100%; }
+    .philosophy-title { white-space: nowrap; }
+    .philosophy-body { max-width: 540px; line-height: 1.6; }
+    .pillar-list { max-width: 540px; margin-top: 2rem; }
+    footer { margin-top: auto; padding: 1.5rem 0; }
+    @media (max-width: 768px) {
+      html, body { overflow: auto; }
+      .philosophy-fullscreen { padding: 2rem 1.5rem; align-items: flex-start; }
+      .philosophy-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+      .philosophy-title { white-space: normal; }
+      .philosophy-body { max-width: 100%; }
+      .pillar-list { max-width: 100%; }
+      .hero-brand-logo { display: none; }
     }
   </style>
 </head>
 <body>
-
   <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark/light mode">
     <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="5"></circle>
-      <line x1="12" y1="1" x2="12" y2="3"></line>
-      <line x1="12" y1="21" x2="12" y2="23"></line>
-      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-      <line x1="1" y1="12" x2="3" y2="12"></line>
-      <line x1="21" y1="12" x2="23" y2="12"></line>
-      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+      <circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
     </svg>
     <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
@@ -121,18 +69,16 @@
         <h2 class="philosophy-title">Immutable persona.<br/>Zero prompting.</h2>
         <h4 class="philosophy-subtitle" style="margin-top: 1rem;">Powered by Vaelora</h4>
         <div style="margin-top: 4rem;">
-            <img src="/logo.png" alt="Vaelora Premium Emblem" class="hero-brand-logo" style="max-height: 160px; width: auto;" />
+          <img src="/logo.png" alt="Vaelora Premium Emblem" class="hero-brand-logo" style="max-height: 160px; width: auto;" />
         </div>
       </div>
-      
       <div class="philosophy-right">
         <p class="philosophy-body"><strong>Seraphine</strong> represents the perfect application layer demonstrating the strength of our underlying inference engine. Rather than relying on fragile developer instructions appended to system prompts, her personality matrix is native to the architecture.</p>
         <p class="philosophy-body">Through direct Low-Rank Adaptation (LoRA) training on structured synthetic conversation matrices, her behavioral parameters are woven into the model's weights, producing an agent that remains responsive, complex, and jailbreak-resistant.</p>
-        
         <div class="pillar-list">
           <div class="pillar">
             <div class="pillar-dot"></div>
-            <p class="pillar-text"><strong>Baked-In Behavioral Stability.</strong> Persona parameters can’t be stripped out by standard system override hacks or prompt injections.</p>
+            <p class="pillar-text"><strong>Baked-In Behavioral Stability.</strong> Persona parameters can't be stripped out by standard system override hacks or prompt injections.</p>
           </div>
           <div class="pillar">
             <div class="pillar-dot"></div>
@@ -143,7 +89,6 @@
             <p class="pillar-text"><strong>Discord Optimized.</strong> Native server integration engineered to respond dynamically and keep communities engaged under high workloads.</p>
           </div>
         </div>
-
         <div style="margin-top: 3.5rem;">
           <a href="/index.html#products" class="btn btn-ghost" style="display: inline-flex; align-items: center; gap: 0.5rem;">
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="transform: rotate(180deg);">
@@ -157,8 +102,8 @@
   </section>
 
   <footer>
-    <span style="margin-left: 1.5rem;" class="footer-logo">Vaelora - Let's make something worth keeping.</span>
-    <span style="margin-right: 1.5rem;" class="footer-meta">© 2026 Vaelora. All rights reserved.</span>
+    <span class="footer-logo">Vaelora - Let's make something worth keeping.</span>
+    <span class="footer-meta">© 2026 Vaelora. All rights reserved.</span>
   </footer>
 
   <script src="/script.js"></script>
