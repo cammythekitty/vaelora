@@ -7,19 +7,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const copyBtn = document.getElementById('copy-email-btn');
   const btnText = document.getElementById('btn-text');
 
-  // Load saved preference on startup
+  // Load saved preference state to align the icons (HTML script handles stylesheet)
   const savedTheme = localStorage.getItem('theme');
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
   const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
   
-  if (themeLink) {
-    // Only update DOM on startup if the preferred theme is different from the default markup
-    const targetHref = initialTheme === 'dark' ? '/darkmode.css' : '/lightmode.css';
-    if (themeLink.getAttribute('href') !== targetHref) {
-      themeLink.setAttribute('href', targetHref);
-    }
-    updateIcons(initialTheme);
-  }
+  updateIcons(initialTheme);
 
   // Toggle Action Click Listener
   if (themeToggle && themeLink) {
@@ -28,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const currentTheme = currentHref.includes('lightmode.css') ? 'light' : 'dark';
       const newTheme = currentTheme === 'light' ? 'dark' : 'light';
       
+      // Force direct, root-relative absolute path
       const targetHref = newTheme === 'dark' ? '/darkmode.css' : '/lightmode.css';
       themeLink.setAttribute('href', targetHref);
       localStorage.setItem('theme', newTheme);
@@ -35,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Pure icon helper to prevent attribute rewrites
+  // Pure icon visibility helper
   function updateIcons(theme) {
     if (theme === 'dark') {
       if (sunIcon) sunIcon.style.display = 'block';
