@@ -37,11 +37,28 @@
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     }
 
-    /* Header */
+    /* Header with Picture */
     header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
       border-bottom: 2px solid var(--border);
       padding-bottom: 20px;
       margin-bottom: 28px;
+      gap: 20px;
+    }
+
+    .header-content {
+      flex: 1;
+    }
+
+    .profile-photo {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--accent);
+      flex-shrink: 0;
     }
 
     h1 {
@@ -163,12 +180,15 @@
 
   <div class="container">
     <header>
-      <h1>Oscar</h1>
-      <div class="contact-info">
-        <span>Sønderborg, Danmark</span>
-        <span>+45 60 54 64 12</span>
-        <span>Vedlagt i ansøgningen</span>
+      <div class="header-content">
+        <h1>Oscar</h1>
+        <div class="contact-info">
+          <span>Sønderborg, Danmark</span>
+          <span>+45 60 54 64 12</span>
+          <span>oscar@sroo.dk</span>
+        </div>
       </div>
+      <img src="image.png" alt="Oscar" class="profile-photo">
     </header>
 
     <section>
