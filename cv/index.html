@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CV - Oscar</title>
+  <style>
+    :root {
+      --primary: #1e293b;
+      --accent: #2563eb;
+      --text: #334155;
+      --text-light: #64748b;
+      --bg: #f8fafc;
+      --border: #e2e8f0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      background-color: var(--bg);
+      line-height: 1.5;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 48px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    /* Header */
+    header {
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 20px;
+      margin-bottom: 28px;
+    }
+
+    h1 {
+      font-size: 32px;
+      color: var(--primary);
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+
+    .contact-info {
+      font-size: 14px;
+      color: var(--text-light);
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .contact-info span:not(:last-child)::after {
+      content: "•";
+      margin-left: 12px;
+    }
+
+    /* Sections */
+    section {
+      margin-bottom: 28px;
+    }
+
+    h2 {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent);
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    p {
+      font-size: 14.5px;
+      color: var(--text);
+    }
+
+    /* Items */
+    .item {
+      margin-bottom: 16px;
+    }
+
+    .item:last-child {
+      margin-bottom: 0;
+    }
+
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 4px;
+    }
+
+    .item-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .item-date {
+      font-size: 13px;
+      color: var(--text-light);
+    }
+
+    /* Lists */
+    ul {
+      list-style-type: none;
+      padding-left: 0;
+    }
+
+    ul li {
+      position: relative;
+      padding-left: 18px;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    ul li::before {
+      content: "•";
+      position: absolute;
+      left: 4px;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+    }
+
+    .skill-category {
+      font-size: 14px;
+    }
+
+    .skill-category strong {
+      color: var(--primary);
+    }
+
+    /* Print styling */
+    @media print {
+      body {
+        background: none;
+        padding: 0;
+      }
+      .container {
+        box-shadow: none;
+        padding: 0;
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Oscar</h1>
+      <div class="contact-info">
+        <span>Sønderborg, Danmark</span>
+        <span>+45 60 54 64 12</span>
+        <span>Vedlagt i ansøgningen</span>
+      </div>
+    </header>
+
+    <section>
+      <h2>Profil</h2>
+      <p>EUX Teknisk-elev med praktisk erfaring inden for kvalitetskontrol samt selvstændig udvikling af software og hardware. Trives med at arbejde tæt på hardwaren – lige fra programmering af lavniveausystemer til at sikre, at produktionen kører uforstyrret på værkstedsgulvet. Selvlært i Rust, Python og Linux-systemadministration med en stærk vane for at opbygge og fejlfinde komplekse tekniske projekter helt fra bunden.</p>
+    </section>
+
+    <section>
+      <h2>Uddannelse</h2>
+      <div class="item">
+        <div class="item-header">
+          <span class="item-title">EUX Teknisk — EUC Syd</span>
+          <span class="item-date">Forventet dimission: 2031</span>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Erhvervserfaring</h2>
+      <div class="item">
+        <div class="item-header">
+          <span class="item-title">Praktikant, Værdihold — Linak</span>
+          <span class="item-date">Uge 45, 2025</span>
+        </div>
+        <ul>
+          <li>Udførte kvalitetskontrol for at sikre, at produkterne levede op til de gældende standarder.</li>
+          <li>Hjalp med at holde produktionen kørende stabilt og støttede teamet i de daglige driftsopgaver.</li>
+          <li>Opnåede praktisk indsigt i fremstillingsprocesser og arbejdsgange inden for kvalitetssikring.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>Personlige Projekter</h2>
+      
+      <div class="item">
+        <div class="item-title">Skræddersyet Linux-operativsystem (Fra bunden)</div>
+        <ul>
+          <li>Skrev en tilpasset x86 NASM-bootloader (Stage 1/Stage 2) og konfigurerede en PREEMPT_RT-kerne med kerneisolering til blandede realtids- og beregningsarbejdsbelastninger.</li>
+          <li>Fejlfindede lavniveauproblemer i boot-fasen og overgangen til protected mode ved at arbejde direkte med hardware-interrupts og hukommelsesadressering.</li>
+        </ul>
+      </div>
+
+      <div class="item">
+        <div class="item-title">SeraphByte — Backend til LLM-inference</div>
+        <ul>
+          <li>Byggede en Rust/Axum-backend til lokal AI-inference, herunder fejlfinding af GPU-drivere og CUDA-kompatibilitet.</li>
+        </ul>
+      </div>
+
+      <div class="item">
+        <div class="item-title">Homelab-godkendelsessystem</div>
+        <ul>
+          <li>Designede og implementerede en produktionsklar godkendelses-backend i Rust/Axum med adgangskode-hashing (Argon2id), kryptering (AES-256-GCM) og sikker token-håndtering.</li>
+          <li>Drifter hele infrastrukturen selv på Arch Linux, herunder reverse proxy, deployment-pipelines og serverhardware.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>Færdigheder</h2>
+      <div class="skills-grid">
+        <div class="skill-category">
+          <strong>Programmering:</strong> Rust, Python, Lodding, Kreativ problemløsning
+        </div>
+        <div class="skill-category">
+          <strong>Systemer:</strong> Linux (Arch), Lavniveau-/embedded-fejlfinding, Selvhostet infrastruktur
+        </div>
+        <div class="skill-category">
+          <strong>Andet:</strong> Selvstændig problemløsning, Vedholdenhed ved langvarige tekniske projekter, Kvalitetskontrol
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Sprog</h2>
+      <div class="skills-grid">
+        <div class="skill-category"><strong>Dansk:</strong> Flydende</div>
+        <div class="skill-category"><strong>Engelsk:</strong> Flydende</div>
+      </div>
+    </section>
+  </div>
+
+</body>
+</html>
