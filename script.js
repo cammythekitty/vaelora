@@ -7,22 +7,51 @@ document.addEventListener('DOMContentLoaded', () => {
   const copyBtn = document.getElementById('copy-email-btn');
   const btnText = document.getElementById('btn-text');
 
-  const savedTheme = localStorage.getItem('theme');
+  const THEME_KEY = 'theme';
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
-  updateIcons(initialTheme);
+
+  function getStoredTheme() {
+    try {
+      const stored = localStorage.getItem(THEME_KEY);
+      return stored === 'light' || stored === 'dark' ? stored : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function applyTheme(theme) {
+    if (!themeLink) return;
+
+    const targetHref = theme === 'light' ? '/lightmode.css' : '/darkmode.css';
+    themeLink.setAttribute('href', targetHref);
+
+    try {
+      localStorage.setItem(THEME_KEY, theme);
+    } catch {
+      // localStorage unavailable, ignore gracefully
+    }
+
+    updateIcons(theme);
+  }
+
+  const initialTheme = getStoredTheme() || (prefersDark ? 'dark' : 'light');
+  applyTheme(initialTheme);
 
   if (themeToggle && themeLink) {
     themeToggle.addEventListener('click', () => {
       const currentHref = themeLink.getAttribute('href') || '';
       const currentTheme = currentHref.includes('lightmode.css') ? 'light' : 'dark';
       const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-      const targetHref = newTheme === 'dark' ? '/darkmode.css' : '/lightmode.css';
-      themeLink.setAttribute('href', targetHref);
-      localStorage.setItem('theme', newTheme);
-      updateIcons(newTheme);
+      applyTheme(newTheme);
     });
   }
+
+  window.addEventListener('storage', (event) => {
+    if (event.key === THEME_KEY) {
+      const storedTheme = getStoredTheme();
+      if (storedTheme) applyTheme(storedTheme);
+    }
+  });
 
   function updateIcons(theme) {
     if (theme === 'dark') {
