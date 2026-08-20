@@ -3,109 +3,924 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="SeraphByte by Vaelora — Bare-metal, zero-dependency LLM inference engine written in Rust.">
-  <meta name="author" content="Vaelora Studio">
-  <title>Vaelora | SeraphByte Engine</title>
-  <link id="theme-link" rel="stylesheet" href="/lightmode.css" />
-  <script>
-    (function() {
-      const savedTheme = localStorage.getItem('theme');
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const activeTheme = savedTheme || (prefersDark ? 'dark' : 'light');
-      const themeLink = document.getElementById('theme-link');
-      if (themeLink) themeLink.href = activeTheme === 'dark' ? '/darkmode.css' : '/lightmode.css';
-    })();
-  </script>
+  <meta name="description" content="SeraphByte — Zero-dependency LLM inference engine written in Rust. No Python. No frameworks. Just speed.">
+  <meta name="author" content="Vaelora">
+  <title>SeraphByte | Rust LLM Inference Engine</title>
+  <link rel="icon" type="image/png" href="/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
-    html, body { margin: 0; padding: 0; min-height: 100vh; display: flex; flex-direction: column; }
-    .sticky-nav { position: relative !important; transform: none !important; opacity: 1 !important; width: 100%; box-sizing: border-box; }
-    .philosophy-fullscreen { flex: 1; display: flex; align-items: center; justify-content: center; padding: 3rem 4rem; box-sizing: border-box; }
-    .philosophy-inner { display: grid; grid-template-columns: 1.1fr 1.3fr; gap: 6rem; width: 100%; max-width: 1200px; margin: 0 auto; align-items: center; }
-    .philosophy-left, .philosophy-right { width: 100%; }
-    .philosophy-title { white-space: nowrap; }
-    .philosophy-body { max-width: 540px; line-height: 1.6; }
-    .pillar-list { max-width: 540px; margin-top: 2rem; }
-    footer { margin-top: auto; padding: 1.5rem 0; }
-    @media (max-width: 768px) {
-      html, body { overflow: auto; }
-      .philosophy-fullscreen { padding: 2rem 1.5rem; align-items: flex-start; }
-      .philosophy-inner { grid-template-columns: 1fr; gap: 2.5rem; }
-      .philosophy-title { white-space: normal; }
-      .philosophy-body { max-width: 100%; }
-      .pillar-list { max-width: 100%; }
-      .hero-brand-logo { display: none; }
+    /* ── Reset & Tokens ──────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #09090B;
+      --surface:  #111113;
+      --border:   #27272A;
+      --muted:    #52525B;
+      --text:     #FAFAFA;
+      --text-dim: #A1A1AA;
+      --green:    #22C55E;
+      --green-dim:#16A34A;
+      --red:      #EF4444;
+
+      --ff-sans: 'Inter', system-ui, sans-serif;
+      --ff-mono: 'JetBrains Mono', monospace;
+
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    html, body {
+      width: 100%;
+      max-width: 100vw;
+      overflow-x: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--ff-sans);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Nav ─────────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 56px;
+      background: rgba(9,9,11,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+    }
+
+    .nav-wordmark {
+      font-size: 0.875rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--text);
+    }
+
+    .nav-wordmark span {
+      color: var(--green);
+    }
+
+    .nav-badge {
+      font-family: var(--ff-mono);
+      font-size: 0.6rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      color: var(--green);
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.25);
+      padding: 0.15rem 0.45rem;
+      border-radius: 3px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-cta {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--bg) !important;
+      background: var(--green);
+      padding: 0.4rem 1rem;
+      border-radius: 4px;
+      transition: background 0.15s !important;
+    }
+
+    .nav-cta:hover { background: #16A34A !important; color: var(--bg) !important; }
+
+    /* ── Hero ────────────────────────────────────────────────── */
+    .hero {
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 7rem 2rem 5rem;
+      position: relative;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* subtle grid background */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(34,197,94,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(34,197,94,0.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+      mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black, transparent);
+      -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black, transparent);
+    }
+
+    .hero > * { position: relative; z-index: 1; }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--ff-mono);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: var(--green);
+      background: rgba(34,197,94,0.08);
+      border: 1px solid rgba(34,197,94,0.2);
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: blink 2s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .hero-title {
+      font-size: clamp(2.75rem, 7vw, 5.5rem);
+      font-weight: 800;
+      line-height: 1.0;
+      letter-spacing: -0.04em;
+      color: var(--text);
+      max-width: 14ch;
+      margin: 0 auto 1.5rem;
+    }
+
+    .hero-title .accent { color: var(--green); }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.15rem);
+      font-weight: 400;
+      color: var(--text-dim);
+      max-width: 52ch;
+      margin: 0 auto 3rem;
+      line-height: 1.75;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 5rem;
+    }
+
+    /* ── Buttons ─────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--ff-sans);
+      font-size: 0.875rem;
+      font-weight: 600;
+      padding: 0.65rem 1.5rem;
+      border-radius: 5px;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s var(--ease);
+    }
+
+    .btn-green {
+      background: var(--green);
+      color: var(--bg);
+    }
+
+    .btn-green:hover { background: var(--green-dim); transform: translateY(-1px); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-outline:hover { border-color: var(--muted); transform: translateY(-1px); }
+
+    /* ── Benchmark Ticker ────────────────────────────────────── */
+    .benchmark-ticker {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      max-width: 720px;
+      width: 100%;
+      margin: 0 auto;
+      background: var(--surface);
+    }
+
+    .ticker-item {
+      padding: 1.5rem 2rem;
+      text-align: left;
+      position: relative;
+    }
+
+    .ticker-item + .ticker-item {
+      border-left: 1px solid var(--border);
+    }
+
+    .ticker-label {
+      font-family: var(--ff-mono);
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .ticker-value {
+      font-family: var(--ff-mono);
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 600;
+      color: var(--green);
+      line-height: 1;
+    }
+
+    .ticker-unit {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.35rem;
+      font-family: var(--ff-mono);
+    }
+
+    /* ── Stats Bar ───────────────────────────────────────────── */
+    .stats-bar {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 2.5rem 4rem;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+    }
+
+    .stat {
+      padding: 0 2rem;
+      border-right: 1px solid var(--border);
+    }
+
+    .stat:first-child { padding-left: 0; }
+    .stat:last-child { border-right: none; }
+
+    .stat-number {
+      font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+
+    .stat-number .green { color: var(--green); }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      line-height: 1.4;
+    }
+
+    /* ── Section Shared ──────────────────────────────────────── */
+    section {
+      padding: 6rem 4rem;
+    }
+
+    .section-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-eyebrow {
+      font-family: var(--ff-mono);
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 1.25rem;
+    }
+
+    .section-sub {
+      font-size: 1rem;
+      color: var(--text-dim);
+      line-height: 1.75;
+      max-width: 56ch;
+    }
+
+    /* ── Features Grid ───────────────────────────────────────── */
+    .features {
+      border-top: 1px solid var(--border);
+    }
+
+    .features-header {
+      margin-bottom: 3.5rem;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .feature-card {
+      padding: 2.25rem;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s var(--ease);
+    }
+
+    .feature-card:hover { background: var(--surface); }
+
+    /* remove right border on last in row, remove bottom border on last row */
+    .feature-card:nth-child(3n) { border-right: none; }
+    .feature-card:nth-last-child(-n+3) { border-bottom: none; }
+
+    .feature-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+      color: var(--green);
+    }
+
+    .feature-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      margin-bottom: 0.6rem;
+    }
+
+    .feature-desc {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      line-height: 1.65;
+    }
+
+    /* ── Architecture ────────────────────────────────────────── */
+    .architecture {
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .arch-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .arch-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      font-family: var(--ff-mono);
+    }
+
+    .arch-layer {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      transition: background 0.15s;
+    }
+
+    .arch-layer:last-child { border-bottom: none; }
+    .arch-layer:hover { background: rgba(34,197,94,0.04); }
+
+    .arch-layer-name {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .arch-layer-tag {
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--green);
+      background: rgba(34,197,94,0.08);
+      border: 1px solid rgba(34,197,94,0.15);
+      padding: 0.15rem 0.45rem;
+      border-radius: 3px;
+    }
+
+    .arch-layer-tag.rust { color: #f97316; background: rgba(249,115,22,0.08); border-color: rgba(249,115,22,0.2); }
+    .arch-layer-tag.ws   { color: #a78bfa; background: rgba(167,139,250,0.08); border-color: rgba(167,139,250,0.2); }
+
+    /* ── Code block ──────────────────────────────────────────── */
+    .code-block {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .code-header {
+      padding: 0.65rem 1rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .code-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .code-dot.red    { background: var(--red); opacity: 0.7; }
+    .code-dot.yellow { background: #EAB308; opacity: 0.7; }
+    .code-dot.green  { background: var(--green); opacity: 0.7; }
+
+    .code-title {
+      font-family: var(--ff-mono);
+      font-size: 0.68rem;
+      color: var(--muted);
+      margin-left: auto;
+    }
+
+    .code-body {
+      padding: 1.25rem;
+      font-family: var(--ff-mono);
+      font-size: 0.78rem;
+      line-height: 1.75;
+      color: var(--text-dim);
+      white-space: pre;
+      overflow-x: auto;
+    }
+
+    .code-body .kw  { color: #a78bfa; }
+    .code-body .fn  { color: #60a5fa; }
+    .code-body .str { color: var(--green); }
+    .code-body .cm  { color: var(--muted); }
+    .code-body .num { color: #fb923c; }
+
+    /* ── CTA Section ─────────────────────────────────────────── */
+    .cta-section {
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .cta-section .section-title {
+      max-width: 18ch;
+      margin: 0 auto 1rem;
+    }
+
+    .cta-section .section-sub {
+      max-width: 46ch;
+      margin: 0 auto 2.5rem;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-green.copied {
+      background: #166534;
+      border-color: #166534;
+    }
+
+    /* ── Footer ──────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-brand {
+      font-family: var(--ff-mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .footer-brand strong { color: var(--text-dim); }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .footer-links a:hover { color: var(--text); }
+
+    /* ── Scroll Reveal ───────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+    }
+
+    .reveal.revealed { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+
+    /* ── Responsive ──────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      section { padding: 4rem 2rem; }
+      .stats-bar { padding: 2rem; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+      .stat { border-right: none; padding: 0; }
+      .stat:nth-child(odd) { border-right: 1px solid var(--border); padding-right: 2rem; }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .feature-card:nth-child(3n) { border-right: 1px solid var(--border); }
+      .feature-card:nth-child(2n) { border-right: none; }
+      .arch-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+      footer { padding: 2rem; }
+    }
+
+    @media (max-width: 600px) {
+      nav { padding: 0 1.25rem; }
+      .nav-links { display: none; }
+      .hero { padding: 6rem 1.25rem 4rem; }
+      .benchmark-ticker { grid-template-columns: 1fr; }
+      .ticker-item + .ticker-item { border-left: none; border-top: 1px solid var(--border); }
+      .features-grid { grid-template-columns: 1fr; }
+      .feature-card { border-right: none !important; }
+      section { padding: 3.5rem 1.25rem; }
+      footer { padding: 1.5rem 1.25rem; flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
 <body>
-  <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark/light mode">
-    <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-    </svg>
-    <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-    </svg>
-  </button>
 
-  <nav class="sticky-nav" aria-label="Main navigation" id="sticky-nav">
-    <a href="/index.html" class="nav-logo-wrap" aria-label="Vaelora homepage">
-      <img src="/logo.png" alt="Vaelora Logo" class="nav-logo-img" />
+  <!-- Nav -->
+  <nav>
+    <a href="/index.html" class="nav-left">
+      <span class="nav-wordmark">Seraph<span>Byte</span></span>
+      <span class="nav-badge">v0.4.1</span>
     </a>
     <ul class="nav-links">
-      <li><a href="/index.html#products">Products</a></li>
-      <li><a href="/index.html#demo">Demo</a></li>
-      <li><a href="/index.html#philosophy">Studio</a></li>
-      <li><a href="/index.html#contact">Contact</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#architecture">Architecture</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="/index.html">← Vaelora</a></li>
+      <li><a href="#contact" class="nav-cta">Get in touch</a></li>
     </ul>
   </nav>
 
-  <section class="philosophy philosophy-fullscreen" id="philosophy">
-    <div class="philosophy-inner">
-      <div class="philosophy-left">
-        <p class="section-label">Engine</p>
-        <h2 class="philosophy-title">Bare-metal speed.<br/>No Python bloat.</h2>
-        <h4 class="philosophy-subtitle" style="margin-top: 1rem;">Powered by Vaelora</h4>
-        <div style="margin-top: 4rem;">
-          <img src="/logo.png" alt="Vaelora Premium Emblem" class="hero-brand-logo" style="max-height: 80px; width: auto;" />
-        </div>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-eyebrow">Written in Rust · Zero dependencies · Self-hosted</div>
+    <h1 class="hero-title">LLM inference at <span class="accent">bare metal.</span></h1>
+    <p class="hero-sub">SeraphByte bypasses every Python abstraction between your hardware and your model. Custom tokenizer, quantized weight loading, WebSocket streaming — all in Rust.</p>
+    <div class="hero-cta">
+      <a href="#architecture" class="btn btn-green">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        Explore the engine
+      </a>
+      <a href="/index.html#contact" class="btn btn-outline">Request access</a>
+    </div>
+
+    <!-- Benchmark Ticker -->
+    <div class="benchmark-ticker">
+      <div class="ticker-item">
+        <div class="ticker-label">tokens / sec</div>
+        <div class="ticker-value" id="tok-counter">0</div>
+        <div class="ticker-unit">GTX 1050 Ti · q4_K_M</div>
       </div>
-      <div class="philosophy-right">
-        <p class="philosophy-body"><strong>SeraphByte</strong> is an independent, zero-dependency LLM inference engine engineered in Rust. By completely bypassing heavy Python environments and deep learning frameworks, it manages raw hardware memory and tensor instructions natively.</p>
-        <p class="philosophy-body">From its custom binary-token parsing to quantized weight memory-mapping, SeraphByte represents a massive leap forward in making consumer hardware (down to GTX 10-series GPUs) viable for lightning-fast, high-context generation.</p>
-        <div class="pillar-list">
-          <div class="pillar">
-            <div class="pillar-dot"></div>
-            <p class="pillar-text"><strong>Zero-Dependency Design.</strong> Written 100% in Rust. Bypasses the footprint of CUDA python bridges, PyTorch, and massive system abstractions.</p>
+      <div class="ticker-item">
+        <div class="ticker-label">first token latency</div>
+        <div class="ticker-value" id="lat-counter">0<span style="font-size:1rem">ms</span></div>
+        <div class="ticker-unit">avg over 50 runs</div>
+      </div>
+      <div class="ticker-item">
+        <div class="ticker-label">peak VRAM</div>
+        <div class="ticker-value" id="mem-counter">0<span style="font-size:1rem">MB</span></div>
+        <div class="ticker-unit">7B model · 4-bit quant</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar reveal">
+    <div class="stat">
+      <div class="stat-number">100<span class="green">%</span></div>
+      <div class="stat-label">Pure Rust — no C<br/>bridges, no Python</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">0</div>
+      <div class="stat-label">Runtime dependencies<br/>outside std</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">4<span class="green">-bit</span></div>
+      <div class="stat-label">Quantization support<br/>via custom loader</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">10<span class="green">xx</span></div>
+      <div class="stat-label">Consumer GPU needed —<br/>GTX 10-series or better</div>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <section class="features" id="features">
+    <div class="section-inner">
+      <div class="features-header reveal">
+        <p class="section-eyebrow">What's inside</p>
+        <h2 class="section-title">Every layer, hand-built.</h2>
+        <p class="section-sub">No framework shims, no vendored wheels. If it touches the model, it was written from scratch.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card reveal">
+          <div class="feature-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
           </div>
-          <div class="pillar">
-            <div class="pillar-dot"></div>
-            <p class="pillar-text"><strong>Low-Latency Streaming.</strong> Employs memory-efficient tokenization and unified WebSockets to stream generations with sub-millisecond network overhead.</p>
-          </div>
-          <div class="pillar">
-            <div class="pillar-dot"></div>
-            <p class="pillar-text"><strong>Optimized Quant Loading.</strong> Reads quantized weights dynamically with optimized memory-allocation strategies designed for consumer-grade hardware limits.</p>
-          </div>
+          <div class="feature-name">Custom Tokenizer</div>
+          <div class="feature-desc">Binary BPE tokenizer built from scratch. Parses model vocab files directly with no HuggingFace dependency.</div>
         </div>
-        <div style="margin-top: 3.5rem;">
-          <a href="/index.html#products" class="btn btn-ghost" style="display: inline-flex; align-items: center; gap: 0.5rem;">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="transform: rotate(180deg);">
-              <path d="M2 6h8M6.5 2.5L10 6l-3.5 3.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            Back to Products
-          </a>
+        <div class="feature-card reveal reveal-delay-1">
+          <div class="feature-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+          </div>
+          <div class="feature-name">Quantized Weight Loader</div>
+          <div class="feature-desc">Memory-maps GGUF files and dequantizes on-the-fly. Keeps VRAM footprint minimal for constrained hardware.</div>
+        </div>
+        <div class="feature-card reveal reveal-delay-2">
+          <div class="feature-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <div class="feature-name">WebSocket Streaming</div>
+          <div class="feature-desc">Token-by-token streaming over WebSocket with sub-millisecond network overhead. Seraphine runs on it live.</div>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="feature-name">Fine-tune Pipeline</div>
+          <div class="feature-desc">End-to-end fine-tuning support. Seraphine's tsundere persona is baked into weights, not runtime prompts.</div>
+        </div>
+        <div class="feature-card reveal reveal-delay-1">
+          <div class="feature-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          </div>
+          <div class="feature-name">Self-hosted by Default</div>
+          <div class="feature-desc">Zero cloud. Runs entirely on-prem with no outbound telemetry. Your model, your hardware, your data.</div>
+        </div>
+        <div class="feature-card reveal reveal-delay-2">
+          <div class="feature-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </div>
+          <div class="feature-name">Rust All The Way Down</div>
+          <div class="feature-desc">No FFI, no WASM boundaries, no scripting layer. Pure Rust from inference loop to WebSocket frame serialization.</div>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- Architecture -->
+  <section class="architecture" id="architecture">
+    <div class="arch-inner">
+      <div class="reveal">
+        <p class="section-eyebrow">Architecture</p>
+        <h2 class="section-title">The stack, top to bottom.</h2>
+        <p class="section-sub" style="margin-bottom: 2.5rem;">Every layer is owned. No black boxes, no vendor SDKs hiding the hot path.</p>
+        <div class="arch-stack">
+          <div class="arch-layer">
+            <span class="arch-layer-name">Discord / WebSocket client</span>
+            <span class="arch-layer-tag ws">ws</span>
+          </div>
+          <div class="arch-layer">
+            <span class="arch-layer-name">SeraphByte WS server</span>
+            <span class="arch-layer-tag rust">rust</span>
+          </div>
+          <div class="arch-layer">
+            <span class="arch-layer-name">Inference loop</span>
+            <span class="arch-layer-tag rust">rust</span>
+          </div>
+          <div class="arch-layer">
+            <span class="arch-layer-name">Attention + KV cache</span>
+            <span class="arch-layer-tag rust">rust</span>
+          </div>
+          <div class="arch-layer">
+            <span class="arch-layer-name">Quantized weight loader (GGUF)</span>
+            <span class="arch-layer-tag rust">rust</span>
+          </div>
+          <div class="arch-layer">
+            <span class="arch-layer-name">BPE tokenizer</span>
+            <span class="arch-layer-tag rust">rust</span>
+          </div>
+          <div class="arch-layer">
+            <span class="arch-layer-name">GPU / CPU (consumer hw)</span>
+            <span class="arch-layer-tag">hw</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal reveal-delay-1">
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-dot red"></span>
+            <span class="code-dot yellow"></span>
+            <span class="code-dot green"></span>
+            <span class="code-title">seraphbyte/src/main.rs</span>
+          </div>
+          <div class="code-body"><span class="cm">// spin up the inference server</span>
+<span class="kw">let</span> engine = <span class="fn">Engine</span>::<span class="fn">load</span>(Config {
+    model: <span class="str">"./models/seraphine-q4.gguf"</span>,
+    quant: <span class="fn">Quant</span>::Q4_K_M,
+    ctx_len: <span class="num">4096</span>,
+    threads: <span class="num">8</span>,
+})?;
+
+<span class="kw">let</span> server = <span class="fn">WsServer</span>::<span class="fn">bind</span>(<span class="str">"0.0.0.0:9001"</span>)?;
+
+<span class="kw">for</span> conn <span class="kw">in</span> server.<span class="fn">incoming</span>() {
+    <span class="kw">let</span> eng = engine.<span class="fn">clone</span>();
+    <span class="fn">tokio</span>::<span class="fn">spawn</span>(<span class="kw">async move</span> {
+        eng.<span class="fn">stream_to</span>(conn).<span class="kw">await</span>
+    });
+}</div>
+        </div>
+
+        <div style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem;">
+          <div style="display: flex; align-items: center; gap: 0.75rem; font-family: var(--ff-mono); font-size: 0.75rem; color: var(--text-dim);">
+            <span style="color: var(--green);">✓</span> Streams tokens as they're generated
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.75rem; font-family: var(--ff-mono); font-size: 0.75rem; color: var(--text-dim);">
+            <span style="color: var(--green);">✓</span> Multiple concurrent connections
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.75rem; font-family: var(--ff-mono); font-size: 0.75rem; color: var(--text-dim);">
+            <span style="color: var(--green);">✓</span> KV cache shared across sessions
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.75rem; font-family: var(--ff-mono); font-size: 0.75rem; color: var(--text-dim);">
+            <span style="color: var(--green);">✓</span> No Python runtime in the process tree
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="cta-section" id="contact">
+    <div class="section-inner reveal">
+      <p class="section-eyebrow">Contact</p>
+      <h2 class="section-title">Let's make something worth keeping.</h2>
+      <p class="section-sub">SeraphByte is in active development. Reach out if you want early access, want to collaborate, or just want to talk Rust.</p>
+      <div class="cta-buttons">
+        <button class="btn btn-green" id="copy-email-btn" data-email="camilla@vaelora.dev">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <span id="btn-text">camilla@vaelora.dev</span>
+        </button>
+        <a href="/index.html" class="btn btn-outline">← Back to Vaelora</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
   <footer>
-    <span class="footer-logo">Vaelora - Let's make something worth keeping.</span>
-    <span class="footer-meta">© 2026 Vaelora. All rights reserved.</span>
+    <span class="footer-brand"><strong>SeraphByte</strong> by Vaelora · © 2026</span>
+    <ul class="footer-links">
+      <li><a href="/index.html#products">Products</a></li>
+      <li><a href="/index.html#contact">Contact</a></li>
+      <li><a href="/index.html#demo">Demo</a></li>
+    </ul>
   </footer>
 
-  <script src="/script.js"></script>
+  <script>
+    // ── Benchmark counter animation ──────────────────────────
+    function animateCounter(id, target, duration, suffix = '') {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const start = performance.now();
+      // preserve any inner HTML suffix spans
+      const suffixHTML = el.innerHTML.includes('<span') 
+        ? el.innerHTML.replace(/^\d+/, '') 
+        : suffix;
+      
+      function tick(now) {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        // ease out expo
+        const eased = 1 - Math.pow(1 - progress, 4);
+        const value = Math.round(eased * target);
+        el.innerHTML = value + suffixHTML;
+        if (progress < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }
+
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        animateCounter('tok-counter', 47, 1800);
+        animateCounter('lat-counter', 312, 2200);
+        animateCounter('mem-counter', 3840, 2000);
+      }, 400);
+    });
+
+    // ── Copy email ───────────────────────────────────────────
+    const copyBtn = document.getElementById('copy-email-btn');
+    const btnText = document.getElementById('btn-text');
+    if (copyBtn && btnText) {
+      copyBtn.addEventListener('click', () => {
+        navigator.clipboard.writeText(copyBtn.dataset.email).then(() => {
+          btnText.textContent = 'Copied!';
+          copyBtn.classList.add('copied');
+          setTimeout(() => {
+            btnText.textContent = copyBtn.dataset.email;
+            copyBtn.classList.remove('copied');
+          }, 2000);
+        });
+      });
+    }
+
+    // ── Scroll reveal ────────────────────────────────────────
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('revealed');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    revealEls.forEach(el => observer.observe(el));
+  </script>
 </body>
 </html>
