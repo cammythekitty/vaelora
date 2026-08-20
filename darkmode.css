@@ -285,6 +285,53 @@ section { padding: 6rem 2.5rem; }
   border-top: 1px solid var(--border);
 }
 
+/* ── Neon Glow Effects (Dark Mode) ───────────────────────── */
+
+/* Terminal accents (removed glow from dollar sign prefix) */
+.terminal-cursor,
+.hero-kicker-dot,
+.chat-status {
+  text-shadow: 0 0 10px rgba(34, 197, 94, 0.6);
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.4);
+}
+
+.btn-green {
+  box-shadow: 0 0 18px rgba(34, 197, 94, 0.35);
+}
+.btn-green:hover {
+  box-shadow: 0 0 25px rgba(34, 197, 94, 0.6);
+}
+
+/* All product tags glowing */
+.tag-green {
+  text-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+  box-shadow: 0 0 15px rgba(34, 197, 94, 0.25);
+}
+
+.tag-violet {
+  text-shadow: 0 0 8px rgba(167, 139, 250, 0.6);
+  box-shadow: 0 0 15px rgba(167, 139, 250, 0.25);
+}
+
+.tag-white {
+  text-shadow: 0 0 8px rgba(250, 250, 250, 0.4);
+  box-shadow: 0 0 15px rgba(250, 250, 250, 0.15);
+}
+
+.msg-user .msg-bubble {
+  box-shadow: 0 0 20px rgba(167, 139, 250, 0.3);
+}
+
+/* Main buttons glow */
+.btn-white:hover {
+  box-shadow: 0 0 20px rgba(250, 250, 250, 0.3);
+}
+
+/* Product cards ambient hover glow */
+.product-card:hover {
+  background: var(--surface);
+  box-shadow: 0 0 35px rgba(167, 139, 250, 0.12), inset 0 0 15px rgba(255, 255, 255, 0.03);
+}
 /* ── Demo ────────────────────────────────────────────────── */
 .demo { border-top: 1px solid var(--border); }
 

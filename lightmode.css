@@ -285,6 +285,53 @@ section { padding: 6rem 2.5rem; }
   border-top: 1px solid var(--border);
 }
 
+/* ── Neon / Soft Glow Effects (Light Mode) ───────────────── */
+
+/* Green accents (no prefix glow) */
+.terminal-cursor,
+.hero-kicker-dot,
+.chat-status {
+  text-shadow: 0 0 8px rgba(22, 163, 74, 0.4);
+  box-shadow: 0 0 10px rgba(22, 163, 74, 0.25);
+}
+
+.btn-green {
+  box-shadow: 0 4px 15px rgba(22, 163, 74, 0.3);
+}
+.btn-green:hover {
+  box-shadow: 0 6px 20px rgba(22, 163, 74, 0.45);
+}
+
+/* All product tags glowing */
+.tag-green {
+  text-shadow: 0 0 6px rgba(22, 163, 74, 0.4);
+  box-shadow: 0 0 12px rgba(22, 163, 74, 0.15);
+}
+
+.tag-violet {
+  text-shadow: 0 0 6px rgba(124, 58, 237, 0.3);
+  box-shadow: 0 0 12px rgba(124, 58, 237, 0.15);
+}
+
+.tag-white {
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
+}
+
+.msg-user .msg-bubble {
+  box-shadow: 0 4px 15px rgba(124, 58, 237, 0.25);
+}
+
+/* Main buttons & cards glow */
+.btn-white:hover {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.product-card:hover {
+  background: var(--surface);
+  box-shadow: 0 10px 30px rgba(124, 58, 237, 0.08);
+}
+
 /* ── Demo ────────────────────────────────────────────────── */
 .demo { border-top: 1px solid var(--border); }
 

@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Vaelora — Independent software lab. Custom LLM inference, personality-driven AI, and a Linux distro. Built from scratch in Rust.">
+  <meta name="description" content="Vaelora. Just me building stuff. Writing my own AI engine, making Discord bots, and putting together a Linux distro from scratch in Rust.">
   <meta name="author" content="Vaelora">
-  <title>Vaelora | Inference · Personality · Software</title>
+  <meta name="theme-color" content="#000000">
+  <title>Vaelora</title>
   <link rel="icon" type="image/png" href="/logo.png">
-  <meta property="og:title" content="Vaelora — Built from scratch.">
-  <meta property="og:description" content="One person. Custom Rust inference engine, a fine-tuned Discord bot, and a Linux distro.">
+  <meta property="og:title" content="Vaelora — Just me building stuff.">
+  <meta property="og:description" content="One person coding. Custom Rust AI engine, a fun Discord bot, a Linux distro, and whatever else I feel like making.">
   <meta property="og:type" content="website">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -26,10 +27,10 @@
       <span class="nav-wordmark">Vaelora</span>
     </a>
     <ul class="nav-links">
-      <li><a href="#products">Products</a></li>
-      <li><a href="#demo">Demo</a></li>
-      <li><a href="#studio">Studio</a></li>
-      <li><a href="#contact" class="nav-cta">Contact</a></li>
+      <li><a href="#products">My Stuff</a></li>
+      <li><a href="#demo">Play Around</a></li>
+      <li><a href="#studio">About Me</a></li>
+      <li><a href="#contact" class="nav-cta">Say Hi</a></li>
       <li>
         <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
           <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
@@ -43,12 +44,12 @@
   <section class="hero">
     <div class="hero-kicker">
       <span class="hero-kicker-dot"></span>
-      Built in public · Streamed live
+      Building in public · Hanging out on Twitch
     </div>
 
     <h1 class="hero-title">
       <img src="/logo.png" alt="Vaelora" class="hero-logo" /><br/>
-      <span class="dim">builds things.</span>
+      <span class="dim">making things for fun.</span>
     </h1>
 
     <div class="hero-terminal">
@@ -59,12 +60,12 @@
     </div>
 
     <p class="hero-sub">
-      One person. No shortcuts. A custom Rust inference engine, a fine-tuned Discord bot, and a Linux distro — all built from scratch.
+      It's literally just me hacking away. No shortcuts. I'm writing a Rust AI engine, making Discord bots that actually have a personality, and piecing together a Linux distro entirely by hand.
     </p>
 
     <div class="hero-actions">
-      <a href="#products" class="btn btn-white">See the work</a>
-      <a href="#contact" class="btn btn-outline">Get in touch</a>
+      <a href="#products" class="btn btn-white">See what I'm building</a>
+      <a href="#contact" class="btn btn-outline">Drop me a line</a>
     </div>
   </section>
 
@@ -75,41 +76,41 @@
     <div class="section-inner">
       <div class="products-header reveal">
         <div>
-          <p class="section-eyebrow">Products</p>
-          <h2 class="section-title">Three projects.<br/>Zero frameworks.</h2>
+          <p class="section-eyebrow">Projects</p>
+          <h2 class="section-title">What I'm working on.<br/>No corporate bloat.</h2>
         </div>
-        <p class="section-sub" style="max-width: 36ch;">Each one ships to real hardware and does something you wouldn't normally see from a solo dev.</p>
+        <p class="section-sub" style="max-width: 36ch;">Each of these actually runs on real hardware. I try to avoid lazy copy-pasting and just build things the hard way.</p>
       </div>
 
       <div class="products-grid">
 
         <a href="/seraphbyte" class="product-card reveal">
           <div class="product-card-top">
-            <span class="product-tag tag-green">Inference · Rust</span>
+            <span class="product-tag tag-green">AI Engine · Rust</span>
             <svg class="product-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
           </div>
           <div class="product-name">SeraphByte</div>
-          <div class="product-desc">A bare-metal LLM inference engine written in Rust from scratch. Custom tokenizer, quantized weight loading, WebSocket streaming — no Python, no PyTorch, no abstractions.</div>
+          <div class="product-desc">A completely custom AI runner I built in Rust. Wrote my own tokenizer and everything. No Python or PyTorch overhead slowing things down.</div>
           <div class="product-meta">GTX 1050 Ti · Q4_K_M · 47 tok/s</div>
         </a>
 
         <a href="#demo" class="product-card reveal reveal-d1">
           <div class="product-card-top">
-            <span class="product-tag tag-violet">Discord Bot · Fine-tuned</span>
+            <span class="product-tag tag-violet">Discord Bot · Custom</span>
             <svg class="product-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
           </div>
           <div class="product-name">Seraphine</div>
-          <div class="product-desc">A Discord agent running a locally fine-tuned LLM. Her personality is baked into the model weights via LoRA — not a system prompt. Served live by SeraphByte.</div>
+          <div class="product-desc">A Discord bot that runs entirely on my own hardware. I baked her personality straight into the model weights via LoRA, so she doesn't just rely on a boring system prompt.</div>
           <div class="product-meta">Qwen2.5-7B · LoRA r=2 · self-hosted</div>
         </a>
 
         <a href="/aether-forge" class="product-card reveal reveal-d2">
           <div class="product-card-top">
-            <span class="product-tag tag-white">Linux Distro · Rust</span>
+            <span class="product-tag tag-white">My OS · Linux</span>
             <svg class="product-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
           </div>
           <div class="product-name">Æther Forge</div>
-          <div class="product-desc">A custom Linux distro for x86_64 workstations. Arch-style base, custom kernel from git, hybrid UEFI/BIOS boot, and a build system orchestrated entirely in Rust.</div>
+          <div class="product-desc">My own custom Linux setup. It's based on Arch, but I compile the kernel myself and automate the whole build process using Rust.</div>
           <div class="product-meta">Custom kernel · pacman · x86_64</div>
         </a>
 
@@ -121,9 +122,9 @@
   <section class="demo" id="demo">
     <div class="demo-inner">
       <div class="demo-header reveal">
-        <p class="section-eyebrow">Live demo</p>
-        <h2 class="section-title">Talk to Seraphine.</h2>
-        <p class="section-sub">Served live by SeraphByte over WebSocket. Limited to 3 prompts — the server's on a GTX 1050 Ti.</p>
+        <p class="section-eyebrow">Sandbox</p>
+        <h2 class="section-title">Come say hi to Seraphine.</h2>
+        <p class="section-sub">She's hooked straight up to my AI engine over WebSockets. I have to cap it at 3 messages because my poor GTX 1050 Ti is trying its best.</p>
       </div>
 
       <div class="chat-container reveal">
@@ -141,7 +142,7 @@
         </div>
 
         <form class="chat-input-row" id="chat-form">
-          <input type="text" id="chat-input" placeholder="Ask her something..." aria-label="Message Seraphine" autocomplete="off" required />
+          <input type="text" id="chat-input" placeholder="Type something..." aria-label="Message Seraphine" autocomplete="off" required />
           <button type="submit" class="btn btn-green" id="send-btn">Send</button>
         </form>
       </div>
@@ -152,23 +153,23 @@
   <section class="studio" id="studio">
     <div class="studio-inner">
       <div class="reveal">
-        <p class="section-eyebrow">About</p>
-        <h2 class="section-title">One person.<br/>No abstractions.</h2>
-        <p class="section-sub" style="margin-top: 1rem;">Vaelora is an independent software lab focused on stripping away the black boxes that make AI slow, opaque, and vendor-locked.</p>
+        <p class="section-eyebrow">About Me</p>
+        <h2 class="section-title">Just me.<br/>Doing it the hard way.</h2>
+        <p class="section-sub" style="margin-top: 1rem;">I started Vaelora because I was tired of all the black boxes and corporate wrappers in tech. I just wanted to see how things actually work under the hood.</p>
       </div>
 
       <div class="studio-pillars reveal reveal-d1">
         <div class="studio-pillar">
           <span class="pillar-num">01</span>
-          <p class="pillar-body"><strong>Self-hosted end to end.</strong> Engineered to run on consumer hardware — GTX 10-series, Raspberry Pi, home servers. Zero cloud, zero vendor lock-in.</p>
+          <p class="pillar-body"><strong>Everything runs locally.</strong> I designed this stuff to run on whatever hardware you have laying around—old GPUs, spare PCs, whatever. No cloud subscriptions or vendor lock-in.</p>
         </div>
         <div class="studio-pillar">
           <span class="pillar-num">02</span>
-          <p class="pillar-body"><strong>Built from the ground up.</strong> The tokenizer, inference engine, fine-tuning pipeline, and Linux distro are all written from scratch. No framework hiding the hot path.</p>
+          <p class="pillar-body"><strong>Writing it from scratch.</strong> I actually write the code for the tokenizers, the AI loops, and the OS kernels instead of just importing massive, bulky libraries.</p>
         </div>
         <div class="studio-pillar">
           <span class="pillar-num">03</span>
-          <p class="pillar-body"><strong>Transparent by default.</strong> Development is streamed live on Twitch. Every bug, every refactor, every late-night LoRA run — in public.</p>
+          <p class="pillar-body"><strong>Hanging out on stream.</strong> I stream basically everything on Twitch. You get to see all the messy bugs, broken builds, and 3 AM meltdowns happen live.</p>
         </div>
       </div>
     </div>
@@ -178,8 +179,8 @@
   <section class="contact" id="contact">
     <div class="contact-inner reveal">
       <p class="section-eyebrow">Contact</p>
-      <h2 class="section-title">Let's make something worth keeping.</h2>
-      <p class="section-sub">A small number of collaborations per year. If the work sounds like a fit, say hello.</p>
+      <h2 class="section-title">Let's talk.</h2>
+      <p class="section-sub">I'm always down to chat about cool tech or maybe team up on a project. Shoot me an email if you want to connect.</p>
       <div class="contact-actions">
         <button class="btn btn-white" id="copy-email-btn" data-email="camilla@vaelora.dev">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
@@ -196,10 +197,10 @@
       <span class="footer-copy">© 2026 · All rights reserved.</span>
     </div>
     <ul class="footer-links">
-      <li><a href="#products">Products</a></li>
-      <li><a href="#demo">Demo</a></li>
-      <li><a href="#studio">Studio</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a href="#products">My Stuff</a></li>
+      <li><a href="#demo">Play Around</a></li>
+      <li><a href="#studio">About Me</a></li>
+      <li><a href="#contact">Say Hi</a></li>
     </ul>
   </footer>
 
@@ -210,7 +211,7 @@
       'a Rust inference engine.',
       'a fine-tuned Discord bot.',
       'a custom Linux distro.',
-      'one person, no shortcuts.',
+      'just me hacking away.',
     ];
     let pi = 0, ci = 0, deleting = false;
     const typedEl = document.getElementById('typed-text');

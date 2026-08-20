@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="SeraphByte — Zero-dependency LLM inference engine written in Rust. No Python. No frameworks. Just speed.">
   <meta name="author" content="Vaelora">
-  <title>SeraphByte | Rust LLM Inference Engine</title>
+  <meta name="theme-color" content="#000000">
+  <title>SeraphByte</title>
   <link rel="icon" type="image/png" href="/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -43,6 +44,35 @@
       font-size: 16px;
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Neon Glow Enhancements ─────────────────────────────── */
+    .hero-eyebrow,
+    .nav-badge,
+    .hero-title .accent,
+    .ticker-value,
+    .stat-number .green,
+    .section-eyebrow,
+    .feature-icon,
+    .arch-layer-tag {
+      text-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+    }
+
+    .nav-badge,
+    .hero-eyebrow,
+    .arch-layer-tag,
+    .feature-icon {
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.2);
+    }
+
+    .arch-layer-tag.rust {
+      text-shadow: 0 0 10px rgba(249, 115, 22, 0.5);
+      box-shadow: 0 0 12px rgba(249, 115, 22, 0.2);
+    }
+
+    .arch-layer-tag.ws {
+      text-shadow: 0 0 10px rgba(167, 139, 250, 0.5);
+      box-shadow: 0 0 12px rgba(167, 139, 250, 0.2);
     }
 
     /* ── Nav ─────────────────────────────────────────────────── */
@@ -116,9 +146,10 @@
       padding: 0.4rem 1rem;
       border-radius: 4px;
       transition: background 0.15s !important;
+      box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
     }
 
-    .nav-cta:hover { background: #16A34A !important; color: var(--bg) !important; }
+    .nav-cta:hover { background: #16A34A !important; color: var(--bg) !important; box-shadow: 0 0 22px rgba(34, 197, 94, 0.6); }
 
     /* ── Hero ────────────────────────────────────────────────── */
     .hero {
@@ -179,6 +210,7 @@
       background: var(--green);
       border-radius: 50%;
       animation: blink 2s ease-in-out infinite;
+      box-shadow: 0 0 8px var(--green);
     }
 
     @keyframes blink {
@@ -234,9 +266,10 @@
     .btn-green {
       background: var(--green);
       color: var(--bg);
+      box-shadow: 0 0 18px rgba(34, 197, 94, 0.35);
     }
 
-    .btn-green:hover { background: var(--green-dim); transform: translateY(-1px); }
+    .btn-green:hover { background: var(--green-dim); transform: translateY(-1px); box-shadow: 0 0 25px rgba(34, 197, 94, 0.6); }
 
     .btn-outline {
       background: transparent;
@@ -244,7 +277,7 @@
       border: 1px solid var(--border);
     }
 
-    .btn-outline:hover { border-color: var(--muted); transform: translateY(-1px); }
+    .btn-outline:hover { border-color: var(--muted); transform: translateY(-1px); box-shadow: 0 0 15px rgba(255, 255, 255, 0.1); }
 
     /* ── Benchmark Ticker ────────────────────────────────────── */
     .benchmark-ticker {
@@ -258,6 +291,7 @@
       width: 100%;
       margin: 0 auto;
       background: var(--surface);
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
     }
 
     .ticker-item {
@@ -388,10 +422,10 @@
       padding: 2.25rem;
       border-right: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
-      transition: background 0.2s var(--ease);
+      transition: background 0.2s var(--ease), box-shadow 0.2s var(--ease);
     }
 
-    .feature-card:hover { background: var(--surface); }
+    .feature-card:hover { background: var(--surface); box-shadow: inset 0 0 20px rgba(34, 197, 94, 0.05); }
 
     /* remove right border on last in row, remove bottom border on last row */
     .feature-card:nth-child(3n) { border-right: none; }
@@ -487,6 +521,7 @@
       border: 1px solid var(--border);
       border-radius: 6px;
       overflow: hidden;
+      box-shadow: 0 0 30px rgba(0,0,0,0.7);
     }
 
     .code-header {
@@ -498,9 +533,9 @@
     }
 
     .code-dot { width: 10px; height: 10px; border-radius: 50%; }
-    .code-dot.red    { background: var(--red); opacity: 0.7; }
-    .code-dot.yellow { background: #EAB308; opacity: 0.7; }
-    .code-dot.green  { background: var(--green); opacity: 0.7; }
+    .code-dot.red    { background: var(--red); opacity: 0.7; box-shadow: 0 0 8px var(--red); }
+    .code-dot.yellow { background: #EAB308; opacity: 0.7; box-shadow: 0 0 8px #EAB308; }
+    .code-dot.green  { background: var(--green); opacity: 0.7; box-shadow: 0 0 8px var(--green); }
 
     .code-title {
       font-family: var(--ff-mono);
@@ -519,11 +554,11 @@
       overflow-x: auto;
     }
 
-    .code-body .kw  { color: #a78bfa; }
-    .code-body .fn  { color: #60a5fa; }
-    .code-body .str { color: var(--green); }
+    .code-body .kw  { color: #a78bfa; text-shadow: 0 0 8px rgba(167,139,250,0.4); }
+    .code-body .fn  { color: #60a5fa; text-shadow: 0 0 8px rgba(96,165,250,0.4); }
+    .code-body .str { color: var(--green); text-shadow: 0 0 8px rgba(34,197,94,0.4); }
     .code-body .cm  { color: var(--muted); }
-    .code-body .num { color: #fb923c; }
+    .code-body .num { color: #fb923c; text-shadow: 0 0 8px rgba(251,146,60,0.4); }
 
     /* ── CTA Section ─────────────────────────────────────────── */
     .cta-section {
@@ -821,16 +856,16 @@
 
         <div style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem;">
           <div style="display: flex; align-items: center; gap: 0.75rem; font-family: var(--ff-mono); font-size: 0.75rem; color: var(--text-dim);">
-            <span style="color: var(--green);">✓</span> Streams tokens as they're generated
+            <span style="color: var(--green); text-shadow: 0 0 8px var(--green);">✓</span> Streams tokens as they're generated
           </div>
           <div style="display: flex; align-items: center; gap: 0.75rem; font-family: var(--ff-mono); font-size: 0.75rem; color: var(--text-dim);">
-            <span style="color: var(--green);">✓</span> Multiple concurrent connections
+            <span style="color: var(--green); text-shadow: 0 0 8px var(--green);">✓</span> Multiple concurrent connections
           </div>
           <div style="display: flex; align-items: center; gap: 0.75rem; font-family: var(--ff-mono); font-size: 0.75rem; color: var(--text-dim);">
-            <span style="color: var(--green);">✓</span> KV cache shared across sessions
+            <span style="color: var(--green); text-shadow: 0 0 8px var(--green);">✓</span> KV cache shared across sessions
           </div>
           <div style="display: flex; align-items: center; gap: 0.75rem; font-family: var(--ff-mono); font-size: 0.75rem; color: var(--text-dim);">
-            <span style="color: var(--green);">✓</span> No Python runtime in the process tree
+            <span style="color: var(--green); text-shadow: 0 0 8px var(--green);">✓</span> No Python runtime in the process tree
           </div>
         </div>
       </div>
