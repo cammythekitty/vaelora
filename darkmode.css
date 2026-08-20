@@ -803,3 +803,81 @@ footer {
 @media (prefers-reduced-motion: reduce) {
   .fade-up { animation: none; opacity: 1; transform: none; }
 }
+
+/* ── Typing Indicator ────────────────────────────────────── */
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0.75rem 1.1rem;
+  min-width: 52px;
+}
+
+.typing-indicator span {
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--mauve-text);
+  opacity: 0.4;
+  animation: typingBounce 1.2s ease-in-out infinite;
+}
+
+.typing-indicator span:nth-child(1) { animation-delay: 0s; }
+.typing-indicator span:nth-child(2) { animation-delay: 0.18s; }
+.typing-indicator span:nth-child(3) { animation-delay: 0.36s; }
+
+@keyframes typingBounce {
+  0%, 60%, 100% { transform: translateY(0);   opacity: 0.4; }
+  30%            { transform: translateY(-6px); opacity: 1;   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .typing-indicator span { animation: none; opacity: 0.6; }
+}
+
+/* ── Scroll-Reveal ───────────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.08s; }
+.reveal-delay-2 { transition-delay: 0.18s; }
+.reveal-delay-3 { transition-delay: 0.28s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
+
+/* ── Nav Active Link ─────────────────────────────────────── */
+.nav-links a.active {
+  opacity: 1;
+  color: var(--mauve-text);
+  position: relative;
+}
+
+.nav-links a.active::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--mauve-text);
+  border-radius: 1px;
+}
+
+/* ── Copy Button Feedback ────────────────────────────────── */
+.btn-primary.copied {
+  background: #2d6a4f;
+  border-color: #2d6a4f;
+  transform: translateY(-1px);
+  transition: background 0.2s var(--ease-out), border-color 0.2s var(--ease-out);
+}

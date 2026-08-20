@@ -112,8 +112,11 @@ document.addEventListener('DOMContentLoaded', () => {
       chatMessages.scrollTop = chatMessages.scrollHeight;
 
       const typing = document.createElement('div');
-      typing.className = 'msg msg-bot';
-      typing.innerHTML = '<div class="msg-bubble">...</div>';
+      typing.className = 'msg msg-bot typing-wrap';
+      typing.innerHTML = `
+        <div class="msg-bubble typing-indicator">
+          <span></span><span></span><span></span>
+        </div>`;
       chatMessages.appendChild(typing);
       chatMessages.scrollTop = chatMessages.scrollHeight;
 
@@ -153,5 +156,35 @@ document.addEventListener('DOMContentLoaded', () => {
         chatMessages.scrollTop = chatMessages.scrollHeight;
       };
     });
+  }
+
+  // ── Scroll-reveal ─────────────────────────────────────────
+  const revealEls = document.querySelectorAll('.reveal');
+  if (revealEls.length) {
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    revealEls.forEach(el => revealObserver.observe(el));
+  }
+
+  // ── Nav active link highlight on scroll ───────────────────
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  if (sections.length && navLinks.length) {
+    const activeObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(a => a.classList.remove('active'));
+          const active = document.querySelector(`.nav-links a[href*="#${entry.target.id}"]`);
+          if (active) active.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+    sections.forEach(s => activeObserver.observe(s));
   }
 });
