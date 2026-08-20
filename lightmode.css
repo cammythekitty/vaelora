@@ -7,7 +7,7 @@
   --surface-2:  #EFEFF1;
   --border:     #E4E4E7;
   --muted:      #A1A1AA;
-  --text:       #18181B;
+  --text:       #000000;
   --text-dim:   #52525B;
   --green:      #16A34A;
   --green-dim:  #15803D;
@@ -75,7 +75,7 @@ nav {
 }
 
 .nav-links a:hover { color: var(--text); }
-.nav-links a.active { color: var(--text); }
+.nav-links a.active { color: var(#7C3AED); }
 
 .nav-links .nav-cta {
   color: var(--bg); background: var(--text);
