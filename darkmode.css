@@ -285,8 +285,6 @@ section { padding: 6rem 2.5rem; }
   border-top: 1px solid var(--border);
 }
 
-/* ── Neon Glow Effects (Dark Mode) ───────────────────────── */
-
 /* Terminal accents (removed glow from dollar sign prefix) */
 .terminal-cursor,
 .hero-kicker-dot,

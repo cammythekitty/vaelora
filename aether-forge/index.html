@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Æther Forge by Vaelora — A fully local AI environment that grows with you.">
+  <meta name="description" content="Æther Forge by Vaelora - A fully local AI environment that grows with you.">
   <meta name="theme-color" content="#000000">
   <title>Æther Forge</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -733,7 +733,7 @@ button { cursor: pointer; font-family: var(--mono); }
 <!-- WIP BANNER -->
 <div class="wip-banner">
   <div class="wip-dot"></div>
-  <span class="wip-text">Active development — unstable builds. Expect breaking changes.</span>
+  <span class="wip-text">Active development - unstable builds. Expect breaking changes.</span>
   <span class="wip-tag">pre-alpha</span>
 </div>
 
@@ -778,7 +778,7 @@ button { cursor: pointer; font-family: var(--mono); }
         <span class="terminal-dot red"></span>
         <span class="terminal-dot yellow"></span>
         <span class="terminal-dot green"></span>
-        <span class="terminal-title">aether-forge — forge@local</span>
+        <span class="terminal-title">aether-forge - forge@local</span>
       </div>
       <div class="terminal-body" id="terminal-output">
         <div><span class="term-prompt">forge@local:~$</span> <span class="term-cursor">_</span></div>
@@ -890,7 +890,7 @@ cd aether-forge &amp;&amp; ./install.sh</div>
 
       <div class="doc-section" id="doc-prompt">
         <h3>System Prompt</h3>
-        <p>The system prompt is Æther Forge's operating contract — what it can access, how it reasons, and how it documents changes. It's loaded fresh each session and ships with sane defaults.</p>
+        <p>The system prompt is Æther Forge's operating contract - what it can access, how it reasons, and how it documents changes. It's loaded fresh each session and ships with sane defaults.</p>
         <p>Edit it to restrict capabilities to specific directories, extend it to give the forge awareness of new tools, or scope it to a particular project.</p>
         <div class="code-block">
 <span class="code-comment"># default location</span>
@@ -903,7 +903,7 @@ cd aether-forge &amp;&amp; ./install.sh</div>
       <div class="doc-section" id="doc-upgrade">
         <h3>Self-Upgrade</h3>
         <p>When Æther Forge builds a new tool, it writes source, runs a sandboxed test, and on success commits the file to your local Git repo with a descriptive message. Failed tools are logged but never registered.</p>
-        <p>Nothing broken makes it into the registry. The diff is yours — inspectable, revertable, owned.</p>
+        <p>Nothing broken makes it into the registry. The diff is yours - inspectable, revertable, owned.</p>
         <div class="code-block">
 <span class="code-comment"># inspect the forge log</span>
 git -C ~/.aetherforge/tools log --oneline
@@ -914,7 +914,7 @@ git -C ~/.aetherforge/tools revert HEAD</div>
 
       <div class="doc-section" id="doc-platform">
         <h3>Platform Notes</h3>
-        <p>Full support on Linux. Windows via WSL2 works for most tool types — native Win32 execution is in progress. macOS voice input works; system-level tool execution has known limitations on Apple Silicon.</p>
+        <p>Full support on Linux. Windows via WSL2 works for most tool types - native Win32 execution is in progress. macOS voice input works; system-level tool execution has known limitations on Apple Silicon.</p>
         <div class="code-block">
 Linux (Arch)  <span class="code-comment">✓ supported but not finished</span>
 Windows WSL2                  <span class="code-comment">x Not supported</span>
@@ -940,11 +940,11 @@ Windows native                <span class="code-dim">x Not supported</span></div
 
   <div class="dl-code-wrap">
     <div class="code-block dl-code" id="dl-linux">
-<span class="code-comment"># Linux — tested on Arch, Debian, Fedora</span>
+<span class="code-comment"># Linux - tested on Arch, Debian, Fedora</span>
 git clone https://github.com/cammythekitty/aether-forge
 cd aether-forge &amp;&amp; ./install.sh</div>
     <div class="code-block dl-code hidden" id="dl-windows">
-<span class="code-comment"># Windows — run inside WSL2</span>
+<span class="code-comment"># Windows - run inside WSL2</span>
 git clone https://github.com/cammythekitty/aether-forge
 cd aether-forge &amp;&amp; bash install.sh</div>
   </div>
@@ -958,7 +958,7 @@ cd aether-forge &amp;&amp; bash install.sh</div>
 <!-- FOOTER -->
 <footer class="footer">
   <span class="footer-wordmark">Æther Forge</span>
-  <span class="footer-copy">© 2026 Vaelora. Pre-alpha — all interfaces subject to change.</span>
+  <span class="footer-copy">© 2026 Vaelora. Pre-alpha - all interfaces subject to change.</span>
 </footer>
 
 <script>
@@ -1146,7 +1146,7 @@ const RUNE_COUNT = 12;
       '→ checking spotify daemon... running',
       '→ fetching liked songs playlist...',
       '→ shuffling 847 tracks',
-      '✓ playback started — Liked Songs (shuffled)',
+      '✓ playback started - Liked Songs (shuffled)',
       '✓ logged: spotify_control v1.2',
     ],
     'find all pdfs in my documents folder': [
@@ -1165,7 +1165,7 @@ const RUNE_COUNT = 12;
       '→ writing: ~/.aetherforge/tools/backup_home.sh',
       '→ sandbox test: pass',
       '→ git commit -m "created backup_home"',
-      '✓ tool registered — run: forge backup_home',
+      '✓ tool registered - run: forge backup_home',
     ],
   };
 

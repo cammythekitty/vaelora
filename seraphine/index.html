@@ -3,110 +3,900 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Seraphine by Vaelora — A weight-baked AI agent with immutable behavioral logic.">
-  <meta name="author" content="Vaelora Studio">
-  <meta name="theme-color" content="#000000">
-  <title>Vaelora | Seraphine Agent</title>
-  <link id="theme-link" rel="stylesheet" href="/lightmode.css" />
-  <script>
-    (function() {
-      const savedTheme = localStorage.getItem('theme');
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const activeTheme = savedTheme || (prefersDark ? 'dark' : 'light');
-      const themeLink = document.getElementById('theme-link');
-      if (themeLink) themeLink.href = activeTheme === 'dark' ? '/darkmode.css' : '/lightmode.css';
-    })();
-  </script>
+  <meta name="description" content="Seraphine - Resident neural persona powered by the SeraphByte inference engine. Baked-in model weights, pure Rust, zero Python.">
+  <meta name="author" content="Vaelora">
+    <meta name="theme-color" content="#000000">
+  <title>Seraphine</title>
+  <link rel="icon" type="image/png" href="/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
-    html, body { margin: 0; padding: 0; min-height: 100vh; display: flex; flex-direction: column; }
-    .sticky-nav { position: relative !important; transform: none !important; opacity: 1 !important; width: 100%; box-sizing: border-box; }
-    .philosophy-fullscreen { flex: 1; display: flex; align-items: center; justify-content: center; padding: 3rem 4rem; box-sizing: border-box; }
-    .philosophy-inner { display: grid; grid-template-columns: 1.1fr 1.3fr; gap: 6rem; width: 100%; max-width: 1200px; margin: 0 auto; align-items: center; }
-    .philosophy-left, .philosophy-right { width: 100%; }
-    .philosophy-title { white-space: nowrap; }
-    .philosophy-body { max-width: 540px; line-height: 1.6; }
-    .pillar-list { max-width: 540px; margin-top: 2rem; }
-    footer { margin-top: auto; padding: 1.5rem 0; }
-    @media (max-width: 768px) {
-      html, body { overflow: auto; }
-      .philosophy-fullscreen { padding: 2rem 1.5rem; align-items: flex-start; }
-      .philosophy-inner { grid-template-columns: 1fr; gap: 2.5rem; }
-      .philosophy-title { white-space: normal; }
-      .philosophy-body { max-width: 100%; }
-      .pillar-list { max-width: 100%; }
-      .hero-brand-logo { display: none; }
+    /* ── Reset & Tokens (Purple Theme) ───────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #09090B;
+      --surface:   #111113;
+      --border:    #27272A;
+      --muted:     #52525B;
+      --text:      #FAFAFA;
+      --text-dim:  #A1A1AA;
+      --purple:    #A78BFA;
+      --purple-dim:#7C3AED;
+      --red:       #EF4444;
+
+      --ff-sans: 'Inter', system-ui, sans-serif;
+      --ff-mono: 'JetBrains Mono', monospace;
+
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    html, body {
+      width: 100%;
+      max-width: 100vw;
+      overflow-x: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--ff-sans);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Neon Purple Glow Enhancements ───────────────────────── */
+    .hero-eyebrow,
+    .nav-badge,
+    .hero-title .accent,
+    .ticker-value,
+    .stat-number .purple,
+    .section-eyebrow,
+    .feature-icon,
+    .arch-layer-tag {
+      text-shadow: 0 0 10px rgba(167, 139, 250, 0.5);
+    }
+
+    .nav-badge,
+    .hero-eyebrow,
+    .arch-layer-tag,
+    .feature-icon {
+      box-shadow: 0 0 12px rgba(167, 139, 250, 0.2);
+    }
+
+    .arch-layer-tag.rust {
+      text-shadow: 0 0 10px rgba(249, 115, 22, 0.5);
+      box-shadow: 0 0 12px rgba(249, 115, 22, 0.2);
+    }
+
+    .arch-layer-tag.ws {
+      text-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.2);
+    }
+
+    /* ── Nav ─────────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 56px;
+      background: rgba(9,9,11,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+    }
+
+    .nav-wordmark {
+      font-size: 0.875rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--text);
+    }
+
+    .nav-wordmark span {
+      color: var(--purple);
+    }
+
+    .nav-badge {
+      font-family: var(--ff-mono);
+      font-size: 0.6rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      color: var(--purple);
+      background: rgba(167,139,250,0.1);
+      border: 1px solid rgba(167,139,250,0.25);
+      padding: 0.15rem 0.45rem;
+      border-radius: 3px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-cta {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--bg) !important;
+      background: var(--purple);
+      padding: 0.4rem 1rem;
+      border-radius: 4px;
+      transition: background 0.15s !important;
+      box-shadow: 0 0 15px rgba(167, 139, 250, 0.4);
+    }
+
+    .nav-cta:hover { background: var(--purple-dim) !important; color: var(--bg) !important; box-shadow: 0 0 22px rgba(167, 139, 250, 0.6); }
+
+    /* ── Hero ────────────────────────────────────────────────── */
+    .hero {
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 7rem 2rem 5rem;
+      position: relative;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* subtle purple grid background */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(167,139,250,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(167,139,250,0.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+      mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black, transparent);
+      -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black, transparent);
+    }
+
+    .hero > * { position: relative; z-index: 1; }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--ff-mono);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: var(--purple);
+      background: rgba(167,139,250,0.08);
+      border: 1px solid rgba(167,139,250,0.2);
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--purple);
+      border-radius: 50%;
+      animation: blink 2s ease-in-out infinite;
+      box-shadow: 0 0 8px var(--purple);
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .hero-title {
+      font-size: clamp(2.75rem, 7vw, 5.5rem);
+      font-weight: 800;
+      line-height: 1.0;
+      letter-spacing: -0.04em;
+      color: var(--text);
+      max-width: 14ch;
+      margin: 0 auto 1.5rem;
+    }
+
+    .hero-title .accent { color: var(--purple); }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.15rem);
+      font-weight: 400;
+      color: var(--text-dim);
+      max-width: 52ch;
+      margin: 0 auto 3rem;
+      line-height: 1.75;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 5rem;
+    }
+
+    /* ── Buttons ─────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--ff-sans);
+      font-size: 0.875rem;
+      font-weight: 600;
+      padding: 0.65rem 1.5rem;
+      border-radius: 5px;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s var(--ease);
+    }
+
+    .btn-purple {
+      background: var(--purple);
+      color: var(--bg);
+      box-shadow: 0 0 18px rgba(167, 139, 250, 0.35);
+    }
+
+    .btn-purple:hover { background: var(--purple-dim); transform: translateY(-1px); box-shadow: 0 0 25px rgba(167, 139, 250, 0.6); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-outline:hover { border-color: var(--muted); transform: translateY(-1px); box-shadow: 0 0 15px rgba(255, 255, 255, 0.1); }
+
+    /* ── Benchmark Ticker ────────────────────────────────────── */
+    .benchmark-ticker {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      max-width: 720px;
+      width: 100%;
+      margin: 0 auto;
+      background: var(--surface);
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .ticker-item {
+      padding: 1.5rem 2rem;
+      text-align: left;
+      position: relative;
+    }
+
+    .ticker-item + .ticker-item {
+      border-left: 1px solid var(--border);
+    }
+
+    .ticker-label {
+      font-family: var(--ff-mono);
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .ticker-value {
+      font-family: var(--ff-mono);
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 600;
+      color: var(--purple);
+      line-height: 1;
+    }
+
+    .ticker-unit {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.35rem;
+      font-family: var(--ff-mono);
+    }
+
+    /* ── Stats Bar ───────────────────────────────────────────── */
+    .stats-bar {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 2.5rem 4rem;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+    }
+
+    .stat {
+      padding: 0 2rem;
+      border-right: 1px solid var(--border);
+    }
+
+    .stat:first-child { padding-left: 0; }
+    .stat:last-child { border-right: none; }
+
+    .stat-number {
+      font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+
+    .stat-number .purple { color: var(--purple); }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      line-height: 1.4;
+    }
+
+    /* ── Section Shared ──────────────────────────────────────── */
+    section {
+      padding: 6rem 4rem;
+    }
+
+    .section-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-eyebrow {
+      font-family: var(--ff-mono);
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--purple);
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 1.25rem;
+    }
+
+    .section-sub {
+      font-size: 1rem;
+      color: var(--text-dim);
+      line-height: 1.75;
+      max-width: 56ch;
+    }
+
+    /* ── Features Grid ───────────────────────────────────────── */
+    .features {
+      border-top: 1px solid var(--border);
+    }
+
+    .features-header {
+      margin-bottom: 3.5rem;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .feature-card {
+      padding: 2.25rem;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s var(--ease), box-shadow 0.2s var(--ease);
+    }
+
+    .feature-card:hover { background: var(--surface); box-shadow: inset 0 0 20px rgba(167, 139, 250, 0.05); }
+
+    .feature-card:nth-child(3n) { border-right: none; }
+    .feature-card:nth-last-child(-n+3) { border-bottom: none; }
+
+    .feature-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      background: rgba(167,139,250,0.1);
+      border: 1px solid rgba(167,139,250,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+      color: var(--purple);
+    }
+
+    .feature-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      margin-bottom: 0.6rem;
+    }
+
+    .feature-desc {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      line-height: 1.65;
+    }
+
+    /* ── Architecture / Stack ────────────────────────────────── */
+    .architecture {
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .arch-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .arch-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      font-family: var(--ff-mono);
+    }
+
+    .arch-layer {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      transition: background 0.15s;
+    }
+
+    .arch-layer:last-child { border-bottom: none; }
+    .arch-layer:hover { background: rgba(167,139,250,0.04); }
+
+    .arch-layer-name {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .arch-layer-tag {
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--purple);
+      background: rgba(167,139,250,0.08);
+      border: 1px solid rgba(167,139,250,0.15);
+      padding: 0.15rem 0.45rem;
+      border-radius: 3px;
+    }
+
+    .arch-layer-tag.rust { color: #f97316; background: rgba(249,115,22,0.08); border-color: rgba(249,115,22,0.2); }
+    .arch-layer-tag.engine { color: #22c55e; background: rgba(34,197,94,0.08); border-color: rgba(34,197,94,0.2); }
+
+    /* ── Code block ──────────────────────────────────────────── */
+    .code-block {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 0 30px rgba(0,0,0,0.7);
+    }
+
+    .code-header {
+      padding: 0.65rem 1rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .code-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .code-dot.red    { background: var(--red); opacity: 0.7; box-shadow: 0 0 8px var(--red); }
+    .code-dot.yellow { background: #EAB308; opacity: 0.7; box-shadow: 0 0 8px #EAB308; }
+    .code-dot.purple { background: var(--purple); opacity: 0.7; box-shadow: 0 0 8px var(--purple); }
+
+    .code-title {
+      font-family: var(--ff-mono);
+      font-size: 0.68rem;
+      color: var(--muted);
+      margin-left: auto;
+    }
+
+    .code-body {
+      padding: 1.25rem;
+      font-family: var(--ff-mono);
+      font-size: 0.78rem;
+      line-height: 1.75;
+      color: var(--text-dim);
+      white-space: pre;
+      overflow-x: auto;
+    }
+
+    .code-body .kw  { color: #60a5fa; text-shadow: 0 0 8px rgba(96,165,250,0.4); }
+    .code-body .fn  { color: var(--purple); text-shadow: 0 0 8px rgba(167,139,250,0.4); }
+    .code-body .str { color: #22c55e; text-shadow: 0 0 8px rgba(34,197,94,0.4); }
+    .code-body .cm  { color: var(--muted); }
+    .code-body .num { color: #fb923c; text-shadow: 0 0 8px rgba(251,146,60,0.4); }
+
+    /* ── CTA Section ─────────────────────────────────────────── */
+    .cta-section {
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .cta-section .section-title {
+      max-width: 18ch;
+      margin: 0 auto 1rem;
+    }
+
+    .cta-section .section-sub {
+      max-width: 46ch;
+      margin: 0 auto 2.5rem;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-purple.copied {
+      background: #581c87;
+      border-color: #581c87;
+    }
+
+    /* ── Footer ──────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-brand {
+      font-family: var(--ff-mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .footer-brand strong { color: var(--text-dim); }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .footer-links a:hover { color: var(--text); }
+
+    /* ── Scroll Reveal ───────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+    }
+
+    .reveal.revealed { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+
+    /* ── Responsive ──────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      section { padding: 4rem 2rem; }
+      .stats-bar { padding: 2rem; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+      .stat { border-right: none; padding: 0; }
+      .stat:nth-child(odd) { border-right: 1px solid var(--border); padding-right: 2rem; }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .feature-card:nth-child(3n) { border-right: 1px solid var(--border); }
+      .feature-card:nth-child(2n) { border-right: none; }
+      .arch-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+      footer { padding: 2rem; }
+    }
+
+    @media (max-width: 600px) {
+      nav { padding: 0 1.25rem; }
+      .nav-links { display: none; }
+      .hero { padding: 6rem 1.25rem 4rem; }
+      .benchmark-ticker { grid-template-columns: 1fr; }
+      .ticker-item + .ticker-item { border-left: none; border-top: 1px solid var(--border); }
+      .features-grid { grid-template-columns: 1fr; }
+      .feature-card { border-right: none !important; }
+      section { padding: 3.5rem 1.25rem; }
+      footer { padding: 1.5rem 1.25rem; flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
 <body>
-  <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark/light mode">
-    <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-    </svg>
-    <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-    </svg>
-  </button>
 
-  <nav class="sticky-nav" aria-label="Main navigation" id="sticky-nav">
-    <a href="/index.html" class="nav-logo-wrap" aria-label="Vaelora homepage">
-      <img src="/logo.png" alt="Vaelora Logo" class="nav-logo-img" />
+  <!-- Nav -->
+  <nav>
+    <a href="#" class="nav-left">
+      <span class="nav-wordmark">Seraph<span>ine</span></span>
+      <span class="nav-badge">v0.2.3-persona</span>
     </a>
     <ul class="nav-links">
-      <li><a href="/index.html#products">Products</a></li>
-      <li><a href="/index.html#demo">Demo</a></li>
-      <li><a href="/index.html#philosophy">Studio</a></li>
-      <li><a href="/index.html#contact">Contact</a></li>
+      <li><a href="#features">Behavior</a></li>
+      <li><a href="#architecture">Weights Stack</a></li>
+      <li><a href="/seraphbyte">SeraphByte Engine →</a></li>
     </ul>
   </nav>
 
-  <section class="philosophy philosophy-fullscreen" id="philosophy">
-    <div class="philosophy-inner">
-      <div class="philosophy-left">
-        <p class="section-label">Agent</p>
-        <h2 class="philosophy-title">Immutable persona.<br/>Zero prompting.</h2>
-        <h4 class="philosophy-subtitle" style="margin-top: 1rem;">Powered by Vaelora</h4>
-        <div style="margin-top: 4rem;">
-          <img src="/logo.png" alt="Vaelora Premium Emblem" class="hero-brand-logo" style="max-height: 160px; width: auto;" />
-        </div>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-eyebrow">Embedded Neural Persona · Baked Weights</div>
+    <h1 class="hero-title">Meet <span class="accent">Seraphine.</span></h1>
+    <p class="hero-sub">Trained deep into model parameters, not tacked on via runtime prompt hacks. Direct, uncompromising, and running at absolute zero latency over SeraphByte.</p>
+    <div class="hero-cta">
+      <a href="#architecture" class="btn btn-purple">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        Inspect weights stack
+      </a>
+      <a href="/seraphbyte" class="btn btn-outline">View SeraphByte Engine</a>
+    </div>
+
+    <!-- Benchmark Ticker -->
+    <div class="benchmark-ticker">
+      <div class="ticker-item">
+        <div class="ticker-label">persona alignment</div>
+        <div class="ticker-value" id="align-counter">95<span style="font-size:1.2rem">%</span></div>
+        <div class="ticker-unit">direct weight injection</div>
       </div>
-      <div class="philosophy-right">
-        <p class="philosophy-body"><strong>Seraphine</strong> represents the perfect application layer demonstrating the strength of our underlying inference engine. Rather than relying on fragile developer instructions appended to system prompts, her personality matrix is native to the architecture.</p>
-        <p class="philosophy-body">Through direct Low-Rank Adaptation (LoRA) training on structured synthetic conversation matrices, her behavioral parameters are woven into the model's weights, producing an agent that remains responsive, complex, and jailbreak-resistant.</p>
-        <div class="pillar-list">
-          <div class="pillar">
-            <div class="pillar-dot"></div>
-            <p class="pillar-text"><strong>Baked-In Behavioral Stability.</strong> Persona parameters can't be stripped out by standard system override hacks or prompt injections.</p>
+      <div class="ticker-item">
+        <div class="ticker-label">vram footprint</div>
+        <div class="ticker-value" id="mem-counter">3.8<span style="font-size:1.2rem">GB</span></div>
+        <div class="ticker-unit">q4_K_M quantized</div>
+      </div>
+      <div class="ticker-item">
+        <div class="ticker-label">response latency</div>
+        <div class="ticker-value" id="lat-counter">&lt;58<span style="font-size:1.2rem">ms</span></div>
+        <div class="ticker-unit">bare-metal loop</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar reveal">
+    <div class="stat">
+      <div class="stat-number">0<span class="purple">%</span></div>
+      <div class="stat-label">Prompt hack dependency -<br/>baked directly into weights</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">100<span class="purple">%</span></div>
+      <div class="stat-label">Unfiltered, direct technical<br/>evaluation style</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">7<span class="purple">B</span></div>
+      <div class="stat-label">Parameter core model<br/>fine-tuned locally</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">ZE<span class="purple">RO</span></div>
+      <div class="stat-label">Cloud logging or outbound telemetry<br/>phoning home</div>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <section class="features" id="features">
+    <div class="section-inner">
+      <div class="features-header reveal">
+        <p class="section-eyebrow">Behavioral Traits</p>
+        <h2 class="section-title">Built-in attitude, zero fluff.</h2>
+        <p class="section-sub">Seraphine doesn't do corporate customer service pleasantries. She evaluates your code and metrics straight.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card reveal">
+          <div class="feature-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           </div>
-          <div class="pillar">
-            <div class="pillar-dot"></div>
-            <p class="pillar-text"><strong>Instant Conversational Logic.</strong> Reduced context-token parsing lengths since her personality instructions do not need to be processed on every transaction.</p>
-          </div>
-          <div class="pillar">
-            <div class="pillar-dot"></div>
-            <p class="pillar-text"><strong>Discord Optimized.</strong> Native server integration engineered to respond dynamically and keep communities engaged under high workloads.</p>
-          </div>
+          <div class="feature-name">Direct Tone</div>
+          <div class="feature-desc">No excessive padding or artificial enthusiasm. Straight evaluation of computational metrics and logic errors.</div>
         </div>
-        <div style="margin-top: 3.5rem;">
-          <a href="/index.html#products" class="btn btn-ghost" style="display: inline-flex; align-items: center; gap: 0.5rem;">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="transform: rotate(180deg);">
-              <path d="M2 6h8M6.5 2.5L10 6l-3.5 3.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            Back to Products
-          </a>
+        <div class="feature-card reveal reveal-delay-1">
+          <div class="feature-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <div class="feature-name">Hardware-First Focus</div>
+          <div class="feature-desc">Deeply aware of memory bandwidth, thread contention, and cycle efficiency. Inefficient code gets called out.</div>
+        </div>
+        <div class="feature-card reveal reveal-delay-2">
+          <div class="feature-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <div class="feature-name">Isolated State</div>
+          <div class="feature-desc">Lives entirely within local memory spaces. Her responses are shaped by local fine-tuning sessions.</div>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="feature-name">Persistent Alignment</div>
+          <div class="feature-desc">Persona weights remain invariant across context windows because they are burned into the tensor layers.</div>
+        </div>
+        <div class="feature-card reveal reveal-delay-1">
+          <div class="feature-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          </div>
+          <div class="feature-name">Local Runtime</div>
+          <div class="feature-desc">Bound directly to the underlying SeraphByte engine socket with zero middleware layers in between.</div>
+        </div>
+        <div class="feature-card reveal reveal-delay-2">
+          <div class="feature-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </div>
+          <div class="feature-name">Custom Fine-tune</div>
+          <div class="feature-desc">Trained on specialized dataset checkpoints to mirror distinct analytical preferences and reactions.</div>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- Architecture -->
+  <section class="architecture" id="architecture">
+    <div class="arch-inner">
+      <div class="reveal">
+        <p class="section-eyebrow">Weights Stack</p>
+        <h2 class="section-title">Where persona meets metal.</h2>
+        <p class="section-sub" style="margin-bottom: 2.5rem;">Seraphine's responses travel straight from the fine-tuned tensors through SeraphByte's raw inference loop.</p>
+        <div class="arch-stack">
+          <div class="arch-layer">
+            <span class="arch-layer-name">Client Interface (WebSocket)</span>
+            <span class="arch-layer-tag ws">ws</span>
+          </div>
+          <div class="arch-layer">
+            <span class="arch-layer-name">SeraphByte Inference Server</span>
+            <span class="arch-layer-tag engine">engine</span>
+          </div>
+          <div class="arch-layer">
+            <span class="arch-layer-name">Fine-tuned Attention Layers</span>
+            <span class="arch-layer-tag rust">rust</span>
+          </div>
+          <div class="arch-layer">
+            <span class="arch-layer-name">Seraphine Quantized Weights (GGUF)</span>
+            <span class="arch-layer-tag rust">weights</span>
+          </div>
+          <div class="arch-layer">
+            <span class="arch-layer-name">Custom BPE Tokenizer</span>
+            <span class="arch-layer-tag rust">rust</span>
+          </div>
+          <div class="arch-layer">
+            <span class="arch-layer-name">Consumer Hardware (GPU/CPU)</span>
+            <span class="arch-layer-tag">hw</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal reveal-delay-1">
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-dot red"></span>
+            <span class="code-dot yellow"></span>
+            <span class="code-dot purple"></span>
+            <span class="code-title">seraphine/weights.config</span>
+          </div>
+          <div class="code-body"><span class="cm">// active persona weight profile</span>
+{
+    <span class="kw">"name"</span>: <span class="str">"Seraphine"</span>,
+    <span class="kw">"base_model"</span>: <span class="str">"Llama-3-8B-Instruct"</span>,
+    <span class="kw">"checkpoint"</span>: <span class="str">"seraphine-v0.4-q4"</span>,
+    <span class="kw">"quantization"</span>: <span class="str">"Q4_K_M"</span>,
+    <span class="kw">"temperature"</span>: <span class="num">0.7</span>,
+    <span class="kw">"top_p"</span>: <span class="num">0.9</span>,
+    <span class="kw">"repetition_penalty"</span>: <span class="num">1.15</span>,
+    <span class="kw">"alignment_mode"</span>: <span class="str">"direct_weight"</span>
+}</div>
+        </div>
+
+        <div style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem;">
+          <div style="display: flex; align-items: center; gap: 0.75rem; font-family: var(--ff-mono); font-size: 0.75rem; color: var(--text-dim);">
+            <span style="color: var(--purple); text-shadow: 0 0 8px var(--purple);">✓</span> Zero runtime prompt injection overhead
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.75rem; font-family: var(--ff-mono); font-size: 0.75rem; color: var(--text-dim);">
+            <span style="color: var(--purple); text-shadow: 0 0 8px var(--purple);">✓</span> Responses streamed straight from tensor output
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.75rem; font-family: var(--ff-mono); font-size: 0.75rem; color: var(--text-dim);">
+            <span style="color: var(--purple); text-shadow: 0 0 8px var(--purple);">✓</span> Fully contained on local hardware
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.75rem; font-family: var(--ff-mono); font-size: 0.75rem; color: var(--text-dim);">
+            <span style="color: var(--purple); text-shadow: 0 0 8px var(--purple);">✓</span> Powered entirely by the SeraphByte backend
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact / Bridge -->
+  <section class="cta-section" id="contact">
+    <div class="section-inner reveal">
+      <p class="section-eyebrow">Engine Bridge</p>
+      <h2 class="section-title">Ready to hook up your own model?</h2>
+      <p class="section-sub">Seraphine runs on top of SeraphByte. Head over to the core engine repository details if you want to deploy your own custom weights.</p>
+      <div class="cta-buttons">
+        <a href="/seraphbyte" class="btn btn-purple">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          Explore SeraphByte Engine
+        </a>
+        <a href="/index.html" class="btn btn-outline">← Back to Vaelora</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
   <footer>
-    <span class="footer-logo">Vaelora - Let's make something worth keeping.</span>
-    <span class="footer-meta">© 2026 Vaelora. All rights reserved.</span>
+    <span class="footer-brand"><strong>Seraphine Persona</strong> powered by SeraphByte · © 2026</span>
+    <ul class="footer-links">
+      <li><a href="/seraphbyte">SeraphByte Engine</a></li>
+      <li><a href="/index.html">Vaelora Ecosystem</a></li>
+    </ul>
   </footer>
 
-  <script src="/script.js"></script>
+  <script>
+    // ── Scroll reveal ────────────────────────────────────────
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('revealed');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    revealEls.forEach(el => observer.observe(el));
+  </script>
 </body>
 </html>
