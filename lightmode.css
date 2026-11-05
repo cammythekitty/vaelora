@@ -75,7 +75,7 @@ nav {
 }
 
 .nav-links a:hover { color: var(--text); }
-.nav-links a.active { color: var(#7C3AED); }
+.nav-links a.active { color: var(--violet); }
 
 .nav-links .nav-cta {
   color: var(--bg); background: var(--text);

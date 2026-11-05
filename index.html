@@ -3,238 +3,222 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Vaelora. Just me building stuff. Writing my own AI engine, making Discord bots, and putting together a Linux distro from scratch in Rust.">
+  <meta name="description" content="Vaelora is an independent software project: a Rust AI inference engine, a self-hosted AI persona, and a custom Arch-based Linux distribution.">
   <meta name="author" content="Vaelora">
-  <meta name="theme-color" content="#000000">
+  <meta name="theme-color" content="#09090B">
   <title>Vaelora</title>
   <link rel="icon" type="image/png" href="/logo.png">
-  <meta property="og:title" content="Vaelora - Just me building stuff.">
-  <meta property="og:description" content="One person coding. Custom Rust AI engine, a fun Discord bot, a Linux distro, and whatever else I feel like making.">
+  <meta property="og:title" content="Vaelora - Independent software, built from the ground up">
+  <meta property="og:description" content="A Rust AI inference engine, a self-hosted AI persona, and a custom Linux distribution, built by one person.">
   <meta property="og:type" content="website">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" id="theme-link" href="/darkmode.css" />
-
+  <script>
+    // Pick the saved or system theme before first paint so there is no flash.
+    (function () {
+      try {
+        var t = localStorage.getItem('theme');
+        if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.getElementById('theme-link').setAttribute('href', '/' + t + 'mode.css');
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="/components.css" />
 </head>
 <body>
+  <a href="#products" class="skip-link">Skip to content</a>
 
   <!-- Nav -->
-  <nav>
-    <a href="#" class="nav-brand">
-      <img src="/logo.png" alt="Vaelora" class="nav-logo" />
+  <nav id="site-nav">
+    <a href="/" class="nav-brand">
+      <img src="/logo.png" alt="" class="nav-logo" />
       <span class="nav-wordmark">Vaelora</span>
     </a>
-    <ul class="nav-links">
-      <li><a href="#products">My Stuff</a></li>
-      <li><a href="#demo">Play Around</a></li>
-      <li><a href="#studio">About Me</a></li>
-      <li><a href="#contact" class="nav-cta">Say Hi</a></li>
-      <li>
-        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
-          <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
-          <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <div class="nav-right">
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#products">Projects</a></li>
+        <li><a href="#demo">Demo</a></li>
+        <li><a href="#studio">About</a></li>
+        <li><a href="#contact" class="nav-cta">Contact</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark theme">
+          <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         </button>
-      </li>
-    </ul>
+        <button class="nav-toggle" id="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
+    </div>
   </nav>
 
-  <!-- Hero -->
-  <section class="hero">
-    <div class="hero-kicker">
-      <span class="hero-kicker-dot"></span>
-      Building in public · Hanging out on Twitch
-    </div>
-
-    <h1 class="hero-title">
-      <img src="/logo.png" alt="Vaelora" class="hero-logo" /><br/>
-      <span class="dim">making things for fun.</span>
-    </h1>
-
-    <div class="hero-terminal">
-      <span class="terminal-prefix">$&nbsp;</span>
-      <span class="terminal-static">vaelora&nbsp;is&nbsp;</span>
-      <span class="terminal-typed" id="typed-text"></span>
-      <span class="terminal-cursor"></span>
-    </div>
-
-    <p class="hero-sub">
-      It's literally just me hacking away. No shortcuts. I'm writing a Rust AI engine, making Discord bots that actually have a personality, and piecing together a Linux distro entirely by hand.
-    </p>
-
-    <div class="hero-actions">
-      <a href="#products" class="btn btn-white">See what I'm building</a>
-      <a href="#contact" class="btn btn-outline">Drop me a line</a>
-    </div>
-  </section>
-
-  <div class="divider"></div>
-
-  <!-- Products -->
-  <section class="products" id="products">
-    <div class="section-inner">
-      <div class="products-header reveal">
-        <div>
-          <p class="section-eyebrow">Projects</p>
-          <h2 class="section-title">What I'm working on.<br/>No corporate bloat.</h2>
-        </div>
-        <p class="section-sub" style="max-width: 36ch;">Each of these actually runs on real hardware. I try to avoid lazy copy-pasting and just build things the hard way.</p>
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-kicker">
+        <span class="hero-kicker-dot"></span>
+        Building in public · <a href="https://www.twitch.tv/cammy_the_kitty" rel="noopener">Streaming on Twitch</a>
       </div>
 
-      <div class="products-grid">
+      <h1 class="hero-title">
+        <img src="/logo.png" alt="Vaelora" class="hero-logo" /><br/>
+        <span class="dim">software built from the ground up.</span>
+      </h1>
 
-        <a href="/seraphbyte" class="product-card reveal">
-          <div class="product-card-top">
-            <span class="product-tag tag-green">AI Engine · Rust</span>
-            <svg class="product-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+      <div class="hero-terminal" aria-hidden="true">
+        <span class="terminal-prefix">$&nbsp;</span>
+        <span class="terminal-static">vaelora&nbsp;is&nbsp;</span>
+        <span class="terminal-typed" id="typed-text"></span>
+        <span class="terminal-cursor"></span>
+      </div>
+
+      <p class="hero-sub">
+        I'm one person writing a Rust AI inference engine, giving a self-hosted AI a personality of her own, and putting together a Linux distribution by hand.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#products" class="btn btn-white">See the projects</a>
+        <a href="#contact" class="btn btn-outline">Get in touch</a>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Projects -->
+    <section class="products" id="products">
+      <div class="section-inner">
+        <div class="products-header reveal">
+          <div>
+            <p class="section-eyebrow">Projects</p>
+            <h2 class="section-title">What I'm building.</h2>
           </div>
-          <div class="product-name">SeraphByte</div>
-          <div class="product-desc">A completely custom AI runner I built in Rust. Wrote my own tokenizer and everything. No Python or PyTorch overhead slowing things down.</div>
-          <div class="product-meta">GTX 1050 Ti · Q4_K_M · 47 tok/s</div>
-        </a>
+          <p class="section-sub narrow">Everything here runs on hardware I own. I'd rather understand how something works than hide it behind a framework.</p>
+        </div>
 
-        <a href="#demo" class="product-card reveal reveal-d1">
-          <div class="product-card-top">
-            <span class="product-tag tag-violet">personality · Custom</span>
-            <svg class="product-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+        <div class="products-grid">
+
+          <a href="/seraphbyte" class="product-card reveal">
+            <div class="product-card-top">
+              <span class="product-tag tag-green">AI Engine · Rust</span>
+              <svg class="product-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+            </div>
+            <div class="product-name">SeraphByte</div>
+            <div class="product-desc">A local LLM inference server written in Rust on top of Candle and Tokio. It loads GGUF models and streams tokens over a WebSocket, with no Python or PyTorch in the loop.</div>
+            <div class="product-meta">GTX 1050 Ti · Q4_K_M · 47 tok/s</div>
+          </a>
+
+          <a href="/seraphine" class="product-card reveal reveal-d1">
+            <div class="product-card-top">
+              <span class="product-tag tag-violet">AI Persona · Fine-tuned</span>
+              <svg class="product-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+            </div>
+            <div class="product-name">Seraphine</div>
+            <div class="product-desc">A self-hosted AI with a distinct personality. It's fine-tuned into the model weights with LoRA rather than relying on a long system prompt, and it runs entirely on my own machine.</div>
+            <div class="product-meta">Qwen2.5-7B · LoRA r=2 · self-hosted</div>
+          </a>
+
+          <a href="/aether-forge" class="product-card reveal reveal-d2">
+            <div class="product-card-top">
+              <span class="product-tag tag-white">Linux Distro · Rust</span>
+              <svg class="product-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+            </div>
+            <div class="product-name">Æther Forge</div>
+            <div class="product-desc">A custom Linux setup based on Arch. I compile the kernel myself and automate the whole build process with a Rust tool.</div>
+            <div class="product-meta">Custom kernel · pacman · x86_64</div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Demo -->
+    <section class="demo" id="demo">
+      <div class="demo-inner">
+        <div class="demo-header reveal">
+          <p class="section-eyebrow">Live demo</p>
+          <h2 class="section-title">Talk to Seraphine.</h2>
+          <p class="section-sub">She's connected to my inference engine over a WebSocket. Each visitor gets three messages, because the GPU behind her is a GTX 1050 Ti and it's doing its best.</p>
+        </div>
+
+        <div class="chat-container reveal">
+          <div class="chat-top">
+            <div class="chat-status"></div>
+            <span class="chat-name">Seraphine</span>
+            <span class="chat-subtitle">/ seraphbyte ws</span>
+            <span class="chat-counter" id="prompt-counter" aria-live="polite">3 prompts left</span>
           </div>
-          <div class="product-name">Seraphine</div>
-          <div class="product-desc">A Program that runs entirely on my own hardware. I baked her personality straight into the model weights via LoRA, so she doesn't just rely on a boring system prompt.</div>
-          <div class="product-meta">Qwen2.5-7B · LoRA r=2 · self-hosted</div>
-        </a>
 
-        <a href="/aether-forge" class="product-card reveal reveal-d2">
-          <div class="product-card-top">
-            <span class="product-tag tag-white">My OS · Linux</span>
-            <svg class="product-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+          <div class="chat-messages" id="chat-messages" aria-live="polite">
+            <div class="msg msg-bot">
+              <div class="msg-bubble">Hmph. Fine, I'm here. Don't expect me to keep you company all day - what do you want?</div>
+            </div>
           </div>
-          <div class="product-name">Æther Forge</div>
-          <div class="product-desc">My own custom Linux setup. It's based on Arch, but I compile the kernel myself and automate the whole build process using Rust.</div>
-          <div class="product-meta">Custom kernel · pacman · x86_64</div>
-        </a>
-      </div>
-    </div>
-  </section>
 
-  <!-- Demo -->
-  <section class="demo" id="demo">
-    <div class="demo-inner">
-      <div class="demo-header reveal">
-        <p class="section-eyebrow">Sandbox</p>
-        <h2 class="section-title">Come say hi to Seraphine.</h2>
-        <p class="section-sub">She's hooked straight up to my AI engine over WebSockets. I have to cap it at 3 messages because my poor GTX 1050 Ti is trying its best.</p>
+          <form class="chat-input-row" id="chat-form">
+            <input type="text" id="chat-input" placeholder="Type something..." aria-label="Message Seraphine" autocomplete="off" maxlength="500" required />
+            <button type="submit" class="btn btn-green" id="send-btn">Send</button>
+            <a href="/seraphine" class="btn btn-violet">About Seraphine</a>
+          </form>
+        </div>
       </div>
+    </section>
 
-      <div class="chat-container reveal">
-        <div class="chat-top">
-          <div class="chat-status"></div>
-          <span class="chat-name">Seraphine</span>
-          <span class="chat-subtitle">/ seraphbyte ws</span>
-          <span class="chat-counter" id="prompt-counter">3 prompts left</span>
+    <!-- About -->
+    <section class="studio" id="studio">
+      <div class="studio-inner">
+        <div class="reveal">
+          <p class="section-eyebrow">About</p>
+          <h2 class="section-title">One person, learning how it all works.</h2>
+          <p class="section-sub tight-top">I started Vaelora because I wanted to see what's actually under the hood of the tools I use, instead of treating them as black boxes. Everything here is a project I build, run and maintain myself.</p>
         </div>
 
-        <div class="chat-messages" id="chat-messages">
-          <div class="msg msg-bot">
-            <div class="msg-bubble">Hmph. Fine, I'm here. Don't expect me to keep you company all day - what do you want?</div>
+        <div class="studio-pillars reveal reveal-d1">
+          <div class="studio-pillar">
+            <span class="pillar-num">01</span>
+            <p class="pillar-body"><strong>Everything runs locally.</strong> The projects are designed to run on hardware you probably already have, like an older GPU or a spare PC, with no cloud subscription or vendor lock-in.</p>
+          </div>
+          <div class="studio-pillar">
+            <span class="pillar-num">02</span>
+            <p class="pillar-body"><strong>Build the layers that matter.</strong> I lean on solid libraries like Candle, Tokio and Arch, and write the parts that teach me something: the inference server, the fine-tune, the kernel build pipeline.</p>
           </div>
         </div>
-
-        <form class="chat-input-row" id="chat-form">
-          <input type="text" id="chat-input" placeholder="Type something..." aria-label="Message Seraphine" autocomplete="off" required />
-          <button type="submit" class="btn btn-green" id="send-btn">Send</button>
-          <a href="/seraphine" class="btn" style="background: #A78BFA; color: #09090B; text-decoration: none;">Check Out The Page</a>
-        </form>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Studio -->
-  <section class="studio" id="studio">
-    <div class="studio-inner">
-      <div class="reveal">
-        <p class="section-eyebrow">About Me</p>
-        <h2 class="section-title">Just me.<br/>Doing it the hard way.</h2>
-        <p class="section-sub" style="margin-top: 1rem;">I started Vaelora because I was tired of all the black boxes and corporate wrappers in tech. I just wanted to see how things actually work under the hood.</p>
-      </div>
-
-      <div class="studio-pillars reveal reveal-d1">
-        <div class="studio-pillar">
-          <span class="pillar-num">01</span>
-          <p class="pillar-body"><strong>Everything runs locally.</strong> I designed this stuff to run on whatever hardware you have laying around-old GPUs, spare PCs, whatever. No cloud subscriptions or vendor lock-in.</p>
-        </div>
-        <div class="studio-pillar">
-          <span class="pillar-num">02</span>
-          <p class="pillar-body"><strong>Writing it from scratch.</strong> I actually write the code for the tokenizers, the AI loops, and the OS kernels instead of just importing massive, bulky libraries.</p>
+    <!-- Contact -->
+    <section class="contact" id="contact">
+      <div class="contact-inner reveal">
+        <p class="section-eyebrow">Contact</p>
+        <h2 class="section-title">Let's talk.</h2>
+        <p class="section-sub">Questions, ideas or a project you'd like to collaborate on? Email is the best way to reach me.</p>
+        <div class="contact-actions">
+          <button class="btn btn-white" id="copy-email-btn" type="button" data-email="camilla@vaelora.dev">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <span id="btn-text">camilla@vaelora.dev</span>
+          </button>
+          <a class="btn btn-outline" href="mailto:camilla@vaelora.dev">Open mail app</a>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- Contact -->
-  <section class="contact" id="contact">
-    <div class="contact-inner reveal">
-      <p class="section-eyebrow">Contact</p>
-      <h2 class="section-title">Let's talk.</h2>
-      <p class="section-sub">I'm always down to chat about cool tech or maybe team up on a project. Shoot me an email if you want to connect.</p>
-      <div class="contact-actions">
-        <button class="btn btn-white" id="copy-email-btn" data-email="camilla@vaelora.dev">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          <span id="btn-text">camilla@vaelora.dev</span>
-        </button>
-      </div>
-    </div>
-  </section>
+    </section>
+  </main>
 
   <!-- Footer -->
   <footer>
     <div class="footer-left">
       <span class="footer-brand">Vaelora</span>
-      <span class="footer-copy">© 2026 · All rights reserved.</span>
+      <span class="footer-copy">© <span id="year">2026</span> · All rights reserved.</span>
     </div>
     <ul class="footer-links">
-      <li><a href="#products">My Stuff</a></li>
-      <li><a href="#demo">Play Around</a></li>
-      <li><a href="#studio">About Me</a></li>
-      <li><a href="#contact">Say Hi</a></li>
+      <li><a href="#products">Projects</a></li>
+      <li><a href="#demo">Demo</a></li>
+      <li><a href="#studio">About</a></li>
+      <li><a href="#contact">Contact</a></li>
     </ul>
   </footer>
 
   <script src="/script.js"></script>
-  <script>
-    // ── Typewriter ───────────────────────────────────────────
-    const phrases = [
-      'a Rust inference engine.',
-      'a fine-tuned Discord bot.',
-      'a custom Linux distro.',
-      'just me hacking away.',
-    ];
-    let pi = 0, ci = 0, deleting = false;
-    const typedEl = document.getElementById('typed-text');
-
-    function type() {
-      const phrase = phrases[pi];
-      if (!deleting) {
-        typedEl.textContent = phrase.slice(0, ++ci);
-        if (ci === phrase.length) {
-          deleting = true;
-          setTimeout(type, 1800);
-          return;
-        }
-        setTimeout(type, 55);
-      } else {
-        typedEl.textContent = phrase.slice(0, --ci);
-        if (ci === 0) {
-          deleting = false;
-          pi = (pi + 1) % phrases.length;
-          setTimeout(type, 300);
-          return;
-        }
-        setTimeout(type, 28);
-      }
-    }
-    setTimeout(type, 800);
-
-  </script>
 </body>
 </html>
