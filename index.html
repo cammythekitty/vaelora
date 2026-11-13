@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Vaelora</title>
-  <meta name="description" content="Placeholder description for the Vaelora home page.">
+  <meta name="description" content="Cammy writes Rust, scripts in Python, runs Arch on every machine she owns, and builds things from scratch.">
 
   <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/assets/img/logos/orbit_icon.png" type="image/png">
@@ -98,7 +98,8 @@
           </g>
         </svg>
         </div>
-        <p class="lead">Placeholder intro. A developer who builds things end to end, from the systems underneath to the interface on top.</p>
+        <p class="lead">I'm Cammy. I write Rust, script in Python, run Arch on every machine I own, and build things from scratch because I want to know how they actually work.</p>
+        <p class="local-time">Based in Denmark, on Central European Time<span data-local-time></span></p>
         <div class="button-row">
           <a class="button button-primary" href="/projects/">See the work</a>
           <a class="button button-secondary" href="/about/">About me</a>
@@ -113,24 +114,24 @@
         </div>
         <ul class="capabilities">
           <li>
-            <h3>Backend & systems</h3>
-            <p>Placeholder: services, APIs and the low-level parts most people never see.</p>
-            <p class="tools">Placeholder tools and languages</p>
+            <h3>Rust</h3>
+            <p>Most of what I build. I write things from scratch and keep dependencies few, so I know what every part is doing.</p>
+            <p class="tools">Rust, Cargo</p>
+          </li>
+          <li>
+            <h3>Linux &amp; sysadmin</h3>
+            <p>Arch on my desktop, a home server and a Raspberry Pi, all set up by hand and kept running. Python comes out when something needs a script.</p>
+            <p class="tools">Arch Linux, Raspberry Pi, Python for scripting</p>
+          </li>
+          <li>
+            <h3>Self-hosting</h3>
+            <p>I'd rather run it myself than rent it. Everything I host is configured by hand, with nothing managed in between.</p>
+            <p class="tools">nginx, Cloudflare Tunnels</p>
           </li>
           <li>
             <h3>Web interfaces</h3>
-            <p>Placeholder: fast, accessible front ends that look like they were designed on purpose.</p>
-            <p class="tools">Placeholder tools and languages</p>
-          </li>
-          <li>
-            <h3>Tooling & automation</h3>
-            <p>Placeholder: scripts and build tools that turn an afternoon of clicking into one command.</p>
-            <p class="tools">Placeholder tools and languages</p>
-          </li>
-          <li>
-            <h3>Linux & infrastructure</h3>
-            <p>Placeholder: setting up, tuning and keeping machines running.</p>
-            <p class="tools">Placeholder tools and languages</p>
+            <p>Plain, fast pages without a framework in the way. This site is one of them.</p>
+            <p class="tools">HTML, CSS, JavaScript</p>
           </li>
         </ul>
       </div>
@@ -145,36 +146,36 @@
         <ul class="project-list">
           <li class="project">
             <div class="project-title">
-              <span class="project-mark" aria-hidden="true">H</span>
-              <h3><a href="#">Halo</a></h3>
+              <span class="project-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="6" opacity="0.5"/><ellipse cx="12" cy="12" rx="10.5" ry="3" transform="rotate(-15 12 12)"/><circle cx="12" cy="12" r="3.4" fill="currentColor" stroke="none"/><path d="M1.5 12A10.5 3 0 0 0 22.5 12" transform="rotate(-15 12 12)"/></svg></span>
+              <h3>Black hole raytracer</h3>
             </div>
             <div class="project-body">
-              <p>Placeholder for a finished project. What it does and the hard problem it solved along the way.</p>
-              <p class="built-with">Built with Language, framework, database</p>
+              <p>A real-time black hole you can fly around. Light bends through curved spacetime per pixel on the GPU, around a glowing, turbulent accretion disk.</p>
+              <p class="built-with">Built with Rust, wgpu, WGSL</p>
             </div>
             <span class="status status-orbit">In orbit</span>
           </li>
           <li class="project">
             <div class="project-title">
-              <span class="project-mark" aria-hidden="true">N</span>
-              <h3><a href="#">Nadir</a></h3>
+              <span class="project-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.5"/><rect x="3" y="4" width="4.5" height="4.5" rx="1"/><rect x="16.5" y="4" width="4.5" height="4.5" rx="1"/><rect x="9.75" y="17" width="4.5" height="4.5" rx="1"/><path d="M10.1 10.4 7.5 8.3M13.9 10.4l2.6-2.1M12 14.5V17"/></svg></span>
+              <h3>systemd-mgr</h3>
             </div>
             <div class="project-body">
-              <p>Placeholder for something in progress. What it'll do, and what's been figured out so far.</p>
-              <p class="built-with">Built with Language, toolkit</p>
+              <p>Portainer, but for systemd. One dashboard to start, stop and watch services on every box in my homelab, without opening inbound ports on any of them. Its MeshMon plugin connects machines behind NAT with hole punching and a relay fallback. An earlier version is open source as <a href="https://github.com/cammythekitty/systemdtainer">systemdtainer</a>.</p>
+              <p class="built-with">Built with Rust, Tokio, WebSockets, PostgreSQL, JavaScript</p>
             </div>
             <span class="status status-pad">On the pad</span>
           </li>
           <li class="project">
             <div class="project-title">
-              <span class="project-mark" aria-hidden="true">P</span>
-              <h3><a href="#">Perihelion</a></h3>
+              <span class="project-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2.5 12c3.5-5.5 10-6.5 14 0-4 6.5-10.5 5.5-14 0z"/><path d="M16.5 12 21 8v8z"/><circle cx="7" cy="11.2" r="0.9" fill="currentColor" stroke="none"/></svg></span>
+              <h3>stockfish-ui</h3>
             </div>
             <div class="project-body">
-              <p>Placeholder for a planned project. The idea, and what it'd show off once it exists.</p>
-              <p class="built-with">Built with Planned stack</p>
+              <p>A fully local chess app around Stockfish: a native window, no browser, no network. Real clocks, an analysis board, a position editor and a blunder report after every game, packaged for Linux, Windows and macOS.</p>
+              <p class="built-with">Built with Rust, wry, tao</p>
             </div>
-            <span class="status status-drafting">Drafting</span>
+            <span class="status status-orbit">In orbit</span>
           </li>
         </ul>
       </div>
@@ -184,8 +185,8 @@
       <div class="container">
         <div class="stack">
           <h2>How I work</h2>
-          <p class="lead">Placeholder paragraph about approach: learn how something works, then build it properly.</p>
-          <p>A second, shorter paragraph. Something a little dry and self-aware, the way the rest of the site talks.</p>
+          <p class="lead">I'm self-taught. Code looked fun to a younger me, so I started and kept building upwards, no tutor and no course.</p>
+          <p>When something catches my interest, I learn how it works underneath and build my own version. I'm open to freelance work, a job or a collaboration.</p>
           <p><a href="/about/">More about me</a></p>
         </div>
       </div>
@@ -196,8 +197,10 @@
     <div class="container footer-inner">
       <p class="footer-status">served from somewhere in low orbit</p>
       <ul class="footer-links">
-        <li><a href="#">Placeholder link</a></li>
-        <li><a href="#">Another link</a></li>
+        <li><a href="https://github.com/cammythekitty">GitHub</a></li>
+        <li><a href="https://www.twitch.tv/cammy_the_kitty">Twitch</a></li>
+        <li><a href="https://discord.gg/gWDmYseFHj">Discord</a></li>
+        <li><a href="mailto:camilla@vaelora.dev">Email</a></li>
       </ul>
       <p>&copy; <span id="year">2026</span> Vaelora Systems</p>
     </div>

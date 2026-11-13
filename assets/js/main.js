@@ -76,6 +76,18 @@ function syncOrbitMotion() {
 syncOrbitMotion();
 motionQuery.addEventListener('change', syncOrbitMotion);
 
+// ── Local time ────────────────────────────────────────────
+// Shows the current time in Denmark next to "Based in Denmark".
+const localTimeEl = document.querySelector('[data-local-time]');
+if (localTimeEl) {
+  const fmt = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Europe/Copenhagen', hour: '2-digit', minute: '2-digit',
+  });
+  const tick = () => { localTimeEl.textContent = `. It's ${fmt.format(new Date())} here right now.`; };
+  tick();
+  setInterval(tick, 30000);
+}
+
 // ── Footer year ───────────────────────────────────────────
 const yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();

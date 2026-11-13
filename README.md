@@ -1,6 +1,6 @@
 # vaelora
 
-Base framework for the new Vaelora site: a showcase of what the developer behind it can build. Plain HTML, CSS and JS with no build step. Content is placeholder for now.
+Base framework for the new Vaelora site: a showcase of what the developer behind it can build. Plain HTML, CSS and JS with no build step.
 
 ## Structure
 
@@ -24,7 +24,7 @@ assets/
     logos/              Orbit logo files (icon + horizontal lockups)
 ```
 
-All text is placeholder. No photos of people or real places. Project logos and designs are welcome: each project has a logo slot, and the featured project has a design preview slot.
+No photos of people or real places. Project logos are inline SVG line icons, and the featured project shows a render from the project itself (`assets/img/projects/`).
 
 ## Design
 
@@ -43,13 +43,13 @@ Everything comes from the orbit logo:
 | `.section`, `.section-heading` | Page band and its heading row with a hairline (optional link on the right) |
 | `.capabilities` | Two-column list of skill areas: name, one line, tools |
 | `.project-list`, `.project` | Rows of projects: logo, name, description, "built with", status |
-| `.project-mark` | Project logo slot (letter for now; swap for `<img class="project-mark">`) |
+| `.project-mark` | Project logo tile holding an inline SVG icon (or an `<img class="project-mark">`) |
 | `.featured-project` | Large design preview beside a project write-up |
 | `.status-orbit` / `-pad` / `-drafting` | Project status: shipped, in progress, planned |
 | `.split` | Two columns on wide screens, stacked on phones |
 | `.facts` | Label and value rows (definition list) |
 | `.button-primary` / `.button-secondary` | Buttons; wrap several in `.button-row` |
-| `.placeholder` | Stand-in for a project design or screenshot; set `--ratio` |
+| `.placeholder` | Stand-in box for a future screenshot; set `--ratio` (currently unused) |
 | `.ways` | Ways to reach out: where, what it's for, the address |
 | `.sparkle-list` | List with the logo's four-point sparkle as bullets |
 | `.stack` | Even vertical spacing between children |

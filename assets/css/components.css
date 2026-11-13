@@ -38,6 +38,13 @@
 
 .orbit-hero .lead { margin-top: var(--space-5); }
 
+/* Where Cammy is, and what time it is there */
+.local-time {
+  margin-top: var(--space-3);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
 /* ── Page intro (inner pages) ──────────────────────────── */
 .page-intro { padding-block: var(--space-6) var(--space-5); }
 .page-intro h1 { max-width: 16ch; }
@@ -93,8 +100,9 @@
   .project-body { grid-column: 1 / -1; grid-row: 2; }
 }
 
-/* Project logo slot. A letter for now; swap the span for
-   <img class="project-mark" src="..." alt=""> once a logo exists. */
+/* Project logo tile: an inline line-icon SVG (drawn in currentColor so it
+   follows the theme) inside a gradient-bordered tile. An <img class="project-mark">
+   works too. */
 .project-mark {
   display: grid;
   place-items: center;
@@ -110,6 +118,7 @@
   font-weight: 400;
   object-fit: cover;
 }
+.project-mark svg { width: 1.875rem; height: 1.875rem; }
 
 /* Featured project: design preview beside the write-up */
 .featured-project {
@@ -123,6 +132,15 @@
 .featured-title { display: flex; align-items: center; gap: var(--space-3); }
 .featured-title h2 { font-size: var(--text-2xl); font-weight: 300; }
 .featured-project .built-with { font-size: var(--text-sm); }
+.featured-project .status { align-self: flex-start; }
+img.design-preview {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: var(--radius);
+  background: var(--surface);
+}
 
 /* ── Capabilities ──────────────────────────────────────── */
 /* What the developer can do: area, one line, the tools behind it. */
@@ -193,12 +211,12 @@
 }
 
 /* ── Facts (definition list) ───────────────────────────── */
-.facts { display: grid; gap: var(--space-3); }
+.facts { display: grid; }
 .facts div {
   display: grid;
   grid-template-columns: 8rem 1fr;
   gap: var(--space-3);
-  padding-bottom: var(--space-3);
+  padding-block: var(--space-3);
   border-bottom: 1px solid var(--line);
 }
 .facts dt { color: var(--text-muted); }
@@ -226,8 +244,11 @@
   list-style: none;
   padding: 0;
 }
-@media (min-width: 860px) {
-  .ways { grid-template-columns: repeat(3, 1fr); }
+@media (min-width: 640px) {
+  .ways { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1000px) {
+  .ways { grid-template-columns: repeat(4, 1fr); gap: 0 var(--space-5); }
 }
 .ways li {
   display: flex;

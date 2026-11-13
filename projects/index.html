@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Projects | Vaelora</title>
-  <meta name="description" content="Placeholder description for the projects page.">
+  <meta name="description" content="Things Cammy has built and is building: a black hole raytracer, a systemd dashboard, a local chess app and more.">
 
   <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/assets/img/logos/orbit_icon.png" type="image/png">
@@ -64,22 +64,27 @@
     <section class="page-intro">
       <div class="container">
         <h1>Projects</h1>
-        <p class="lead">Things I've built and am building, with what each one is made of. Placeholder names and descriptions for now.</p>
+        <p class="lead">Things I've built and am building, and what each one is made of.</p>
       </div>
     </section>
 
     <section class="section">
       <div class="container">
         <article class="featured-project">
-          <div class="placeholder design-preview" style="--ratio: 16/10">Project design or screenshot</div>
+          <img class="design-preview"
+               src="/assets/img/projects/blackhole-1600.webp"
+               srcset="/assets/img/projects/blackhole-1600.webp 1600w, /assets/img/projects/blackhole-2400.webp 2400w"
+               sizes="(min-width: 860px) 42rem, 100vw"
+               width="1600" height="900"
+               alt="A black hole rendered by the raytracer: a glowing yellow accretion disk, with light from behind the hole bent up and over it into a bright ring.">
           <div class="stack">
             <div class="featured-title">
-              <span class="project-mark" aria-hidden="true">H</span>
-              <h2>Halo</h2>
+              <span class="project-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="6" opacity="0.5"/><ellipse cx="12" cy="12" rx="10.5" ry="3" transform="rotate(-15 12 12)"/><circle cx="12" cy="12" r="3.4" fill="currentColor" stroke="none"/><path d="M1.5 12A10.5 3 0 0 0 22.5 12" transform="rotate(-15 12 12)"/></svg></span>
+              <h2>Black hole raytracer</h2>
             </div>
-            <p class="lead">Placeholder for the project worth leading with. What it is, who it's for, and the part you're proudest of.</p>
-            <p>A second paragraph on how it was built: the interesting decision, the hard bug, the result.</p>
-            <p class="built-with">Built with Language, framework, database</p>
+            <p class="lead">A real-time black hole you can fly around. Every pixel's light ray is bent through curved spacetime on the GPU.</p>
+            <p>The accretion disk is layered 3D noise with Doppler beaming and gravitational redshift, coloured by temperature. It can save screenshots up to 128K by rendering in tiles. The 128K one needs about 34 GB of free RAM, so it's mostly there because it could be.</p>
+            <p class="built-with">Built with Rust, wgpu, WGSL</p>
             <span class="status status-orbit">In orbit</span>
           </div>
         </article>
@@ -94,58 +99,47 @@
         <ul class="project-list">
           <li class="project">
             <div class="project-title">
-              <span class="project-mark" aria-hidden="true">N</span>
-              <h3><a href="#">Nadir</a></h3>
+              <span class="project-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.5"/><rect x="3" y="4" width="4.5" height="4.5" rx="1"/><rect x="16.5" y="4" width="4.5" height="4.5" rx="1"/><rect x="9.75" y="17" width="4.5" height="4.5" rx="1"/><path d="M10.1 10.4 7.5 8.3M13.9 10.4l2.6-2.1M12 14.5V17"/></svg></span>
+              <h3>systemd-mgr</h3>
             </div>
             <div class="project-body">
-              <p>Placeholder for something in progress. What it'll do, and what's been figured out so far.</p>
-              <p class="built-with">Built with Language, toolkit</p>
+              <p>Portainer, but for systemd. One dashboard to start, stop and watch services on every box in my homelab, without opening inbound ports on any of them. Its MeshMon plugin connects machines behind NAT with hole punching and a relay fallback. An earlier version is open source as <a href="https://github.com/cammythekitty/systemdtainer">systemdtainer</a>.</p>
+              <p class="built-with">Built with Rust, Tokio, WebSockets, PostgreSQL, JavaScript</p>
             </div>
             <span class="status status-pad">On the pad</span>
           </li>
           <li class="project">
             <div class="project-title">
-              <span class="project-mark" aria-hidden="true">P</span>
-              <h3><a href="#">Perihelion</a></h3>
+              <span class="project-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2.5 12c3.5-5.5 10-6.5 14 0-4 6.5-10.5 5.5-14 0z"/><path d="M16.5 12 21 8v8z"/><circle cx="7" cy="11.2" r="0.9" fill="currentColor" stroke="none"/></svg></span>
+              <h3>stockfish-ui</h3>
             </div>
             <div class="project-body">
-              <p>Placeholder for a planned project. The idea, and what it'd show off once it exists.</p>
-              <p class="built-with">Built with Planned stack</p>
-            </div>
-            <span class="status status-drafting">Drafting</span>
-          </li>
-          <li class="project">
-            <div class="project-title">
-              <span class="project-mark" aria-hidden="true">L</span>
-              <h3><a href="#">Lumen</a></h3>
-            </div>
-            <div class="project-body">
-              <p>Another shipped project. The problem, the approach, the result.</p>
-              <p class="built-with">Built with Language, framework</p>
+              <p>A fully local chess app around Stockfish: a native window, no browser, no network. Real clocks, an analysis board, a position editor and a blunder report after every game, packaged for Linux, Windows and macOS.</p>
+              <p class="built-with">Built with Rust, wry, tao</p>
             </div>
             <span class="status status-orbit">In orbit</span>
           </li>
           <li class="project">
             <div class="project-title">
-              <span class="project-mark" aria-hidden="true">V</span>
-              <h3><a href="#">Vesper</a></h3>
+              <span class="project-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3 19.5 7.2 12 11.5 4.5 7.2z"/><path d="M4.5 7.2v8.6l7.5 4.3 7.5-4.3V7.2M12 11.5v8.6"/></svg></span>
+              <h3>mc-relay</h3>
             </div>
             <div class="project-body">
-              <p>Another work in progress. One sentence on the interesting part.</p>
-              <p class="built-with">Built with Language, library</p>
+              <p>A relay so friends can join a Minecraft server at home that has no public IP. A small VPS takes the connection and passes it home over WireGuard, so nothing at home is exposed. Built, not running yet.</p>
+              <p class="built-with">Built with Rust, Tokio, WireGuard</p>
             </div>
             <span class="status status-pad">On the pad</span>
           </li>
           <li class="project">
             <div class="project-title">
-              <span class="project-mark" aria-hidden="true">A</span>
-              <h3><a href="#">Azimuth</a></h3>
+              <span class="project-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 20 12 4h8M12 4v16h8M12 12h6"/></svg></span>
+              <h3>aetherOS</h3>
             </div>
             <div class="project-body">
-              <p>Another idea on paper. Why it's worth building.</p>
-              <p class="built-with">Built with Planned stack</p>
+              <p>The build system for my own Linux distribution. It compiles a kernel from source and boots it in QEMU for testing. Early days.</p>
+              <p class="built-with">Built with Rust, QEMU</p>
             </div>
-            <span class="status status-drafting">Drafting</span>
+            <span class="status status-pad">On the pad</span>
           </li>
         </ul>
       </div>
@@ -156,8 +150,10 @@
     <div class="container footer-inner">
       <p class="footer-status">served from somewhere in low orbit</p>
       <ul class="footer-links">
-        <li><a href="#">Placeholder link</a></li>
-        <li><a href="#">Another link</a></li>
+        <li><a href="https://github.com/cammythekitty">GitHub</a></li>
+        <li><a href="https://www.twitch.tv/cammy_the_kitty">Twitch</a></li>
+        <li><a href="https://discord.gg/gWDmYseFHj">Discord</a></li>
+        <li><a href="mailto:camilla@vaelora.dev">Email</a></li>
       </ul>
       <p>&copy; <span id="year">2026</span> Vaelora Systems</p>
     </div>
