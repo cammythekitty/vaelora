@@ -1,0 +1,66 @@
+/* Reset and base typography. Element styles only, no classes. */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+* { margin: 0; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: 400;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+main { flex: 1; }
+
+img, svg, picture, video { display: block; max-width: 100%; }
+
+input, button, textarea, select { font: inherit; color: inherit; }
+
+h1, h2, h3 {
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+h1 { font-size: var(--text-2xl); }
+h2 { font-size: var(--text-xl); font-weight: 400; }
+h3 { font-size: var(--text-lg); font-weight: 400; }
+
+p { max-width: var(--measure); text-wrap: pretty; }
+
+a {
+  color: var(--link);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25em;
+}
+a:hover { text-decoration-thickness: 2px; }
+
+code, pre { font-family: var(--font-mono); font-size: 0.9em; }
+
+::selection { background: var(--iris); color: #fff; }
+
+:focus-visible {
+  outline: 2px solid var(--iris);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

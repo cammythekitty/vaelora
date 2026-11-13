@@ -1,2 +1,2 @@
-aether-forge/target
-aether-forge/Cargo.lock
+.DS_Store
+*.swp

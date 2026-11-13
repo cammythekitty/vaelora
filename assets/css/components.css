@@ -1,0 +1,271 @@
+/* Reusable pieces: orbit hero, page intro, sections, project list,
+   buttons, split layout, placeholders, forms. */
+
+/* ── Orbit hero (home + 404) ───────────────────────────── */
+/* The ring passes behind the headline and back out in front,
+   like the ring around the V in the logo. */
+.orbit-hero {
+  position: relative;
+  padding-block: var(--space-7) var(--space-6);
+  overflow: hidden;
+}
+
+.orbit-stage { position: relative; }
+
+.orbit-stage h1 {
+  position: relative;
+  z-index: 1;
+  max-width: 11ch;
+  font-size: var(--text-hero);
+  font-weight: 300;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+}
+
+.orbit {
+  position: absolute;
+  z-index: 0;
+  left: -8%;
+  top: 50%;
+  width: 116%;
+  height: auto;
+  transform: translateY(-50%);
+  overflow: visible;
+  pointer-events: none;
+}
+.orbit-front { z-index: 2; }
+.orbit-back path { opacity: var(--orbit-back-opacity); }
+
+.orbit-hero .lead { margin-top: var(--space-5); }
+
+/* ── Page intro (inner pages) ──────────────────────────── */
+.page-intro { padding-block: var(--space-6) var(--space-5); }
+.page-intro h1 { max-width: 16ch; }
+.page-intro .lead { margin-top: var(--space-3); }
+
+.lead {
+  color: var(--text-muted);
+  font-size: var(--text-lg);
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+/* ── Sections ──────────────────────────────────────────── */
+.section { padding-top: var(--space-6); }
+
+.section-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--line);
+}
+.section-heading a { font-size: var(--text-sm); }
+
+.stack > * + * { margin-top: var(--space-3); }
+
+/* ── Project list ──────────────────────────────────────── */
+/* Rows, not cards: name, what it is and what it's built with, and where it is. */
+.project-list { list-style: none; padding: 0; }
+
+.project {
+  display: grid;
+  grid-template-columns: 14rem minmax(0, 1fr) 7.5rem;
+  align-items: center;
+  gap: var(--space-2) var(--space-5);
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--line);
+}
+
+.project h3 { font-size: var(--text-xl); font-weight: 300; }
+.project h3 a { color: var(--text); text-decoration: none; }
+.project h3 a:hover { color: var(--link); }
+.project p { color: var(--text-muted); }
+.project .built-with { margin-top: var(--space-1); color: var(--text); font-size: var(--text-sm); }
+.project .status { justify-self: end; }
+
+.project-title { display: flex; align-items: center; gap: var(--space-3); }
+
+@media (max-width: 720px) {
+  .project { grid-template-columns: 1fr auto; }
+  .project-body { grid-column: 1 / -1; grid-row: 2; }
+}
+
+/* Project logo slot. A letter for now; swap the span for
+   <img class="project-mark" src="..." alt=""> once a logo exists. */
+.project-mark {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius);
+  background:
+    linear-gradient(var(--surface), var(--surface)) padding-box,
+    var(--spectrum) border-box;
+  border: 1.5px solid transparent;
+  color: var(--text);
+  font-size: var(--text-lg);
+  font-weight: 400;
+  object-fit: cover;
+}
+
+/* Featured project: design preview beside the write-up */
+.featured-project {
+  display: grid;
+  gap: var(--space-5);
+  align-items: center;
+}
+@media (min-width: 860px) {
+  .featured-project { grid-template-columns: 3fr 2fr; gap: var(--space-6); }
+}
+.featured-title { display: flex; align-items: center; gap: var(--space-3); }
+.featured-title h2 { font-size: var(--text-2xl); font-weight: 300; }
+.featured-project .built-with { font-size: var(--text-sm); }
+
+/* ── Capabilities ──────────────────────────────────────── */
+/* What the developer can do: area, one line, the tools behind it. */
+.capabilities {
+  display: grid;
+  gap: 0 var(--space-6);
+  list-style: none;
+  padding: 0;
+}
+@media (min-width: 720px) {
+  .capabilities { grid-template-columns: 1fr 1fr; }
+}
+.capabilities li {
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--line);
+}
+.capabilities h3 { margin-bottom: var(--space-2); }
+.capabilities p { color: var(--text-muted); }
+.capabilities .tools { margin-top: var(--space-2); color: var(--text); font-size: var(--text-sm); }
+
+/* Status: in orbit = running, on the pad = being built, drafting = idea */
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+}
+.status::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+}
+.status-orbit::before { background: var(--azure); border-color: var(--azure); box-shadow: 0 0 8px var(--azure); }
+.status-pad::before { background: var(--rose); border-color: var(--rose); }
+.status-drafting::before { background: transparent; }
+
+/* ── Buttons ───────────────────────────────────────────── */
+.button-row { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-5); }
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+}
+.button-primary { background: var(--button-bg); color: var(--button-text); }
+.button-primary:hover { background: var(--iris); color: #fff; }
+.button-secondary { border-color: var(--line); color: var(--text); }
+.button-secondary:hover { border-color: var(--text-muted); }
+
+/* ── Split ─────────────────────────────────────────────── */
+.split {
+  display: grid;
+  gap: var(--space-5);
+  align-items: start;
+}
+@media (min-width: 800px) {
+  .split { grid-template-columns: 3fr 2fr; gap: var(--space-6); }
+}
+
+/* ── Facts (definition list) ───────────────────────────── */
+.facts { display: grid; gap: var(--space-3); }
+.facts div {
+  display: grid;
+  grid-template-columns: 8rem 1fr;
+  gap: var(--space-3);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--line);
+}
+.facts dt { color: var(--text-muted); }
+.facts dd { margin: 0; }
+
+/* ── Placeholder media ─────────────────────────────────── */
+/* Stand-in for a project design or screenshot. Set the ratio with style="--ratio: 16/10". */
+.placeholder {
+  display: grid;
+  place-items: center;
+  aspect-ratio: var(--ratio, 16 / 9);
+  background:
+    radial-gradient(circle at 30% 25%, color-mix(in srgb, var(--iris) 22%, transparent), transparent 60%),
+    var(--surface);
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+/* ── Ways to reach (contact) ───────────────────────────── */
+/* Each way: where, what it's good for, the address. */
+.ways {
+  display: grid;
+  gap: 0 var(--space-6);
+  list-style: none;
+  padding: 0;
+}
+@media (min-width: 860px) {
+  .ways { grid-template-columns: repeat(3, 1fr); }
+}
+.ways li {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-block: var(--space-4);
+  border-top: 1px solid var(--line);
+}
+.ways h2 { font-size: var(--text-xl); font-weight: 300; }
+.ways p { color: var(--text-muted); }
+.ways a { margin-top: auto; padding-top: var(--space-2); }
+
+/* ── Sparkle list ──────────────────────────────────────── */
+/* Bullets are the four-point sparkle from the logo. */
+.sparkle-list {
+  display: grid;
+  gap: var(--space-3);
+  max-width: var(--measure);
+  margin-top: var(--space-4);
+  list-style: none;
+  padding: 0;
+  font-size: var(--text-lg);
+  font-weight: 300;
+}
+.sparkle-list li {
+  position: relative;
+  padding-left: 2rem;
+}
+.sparkle-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.45em;
+  width: 15px;
+  height: 15px;
+  background: var(--spectrum);
+  clip-path: path("M7.5,0 Q8.25,6.75 15,7.5 Q8.25,8.25 7.5,15 Q6.75,8.25 0,7.5 Q6.75,6.75 7.5,0Z");
+}
+
+/* Inner pages: the intro already provides space above the first section */
+.page-intro + .section { padding-top: var(--space-3); }
